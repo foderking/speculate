@@ -1,9 +1,10 @@
 package foderking.speculate;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -24,7 +25,8 @@ public class Laptop {
     private String picture;
     private String model;
     private String reviewVersion;
-//    private Map<String, String> info;
+    @ElementCollection
+    private Map<String, String> info;
 
     public Laptop(
             String link,
@@ -32,8 +34,8 @@ public class Laptop {
             String reviewDate,
             String picture,
             String model,
-            String reviewVersion//,
-//            Map<String, String> info
+            String reviewVersion,
+            Map<String, String> info
     ) {
         this.link = link;
         this.reviewer = reviewer;
@@ -41,7 +43,7 @@ public class Laptop {
         this.picture = picture;
         this.model = model;
         this.reviewVersion = reviewVersion;
-//        this.info = info;
+        this.info = info;
     }
 
     public Laptop() {
@@ -68,13 +70,11 @@ public class Laptop {
                     .strip();
         }
     }
-
     public static String parseReviewDate(Document doc) {
         return doc
                 .select(".intro-date > time:nth-child(1)")
                 .attr("datetime");
     }
-
     public static String parsePicture(Document doc) {
         // reviews below v8 are parsed differently
         Elements orig = doc.select(".csc-textpic-above");
@@ -89,7 +89,6 @@ public class Laptop {
                     .attr("src");
         }
     }
-
     public static String parseModel(Document doc) {
         return doc
                 .select(".specs_header")
@@ -97,14 +96,12 @@ public class Laptop {
                 .text()
                 .split(" [(]")[0];
     }
-
     public static String parseReviewVersion(Document doc) {
         return doc
                 .select("#tspan4368")
                 .text()
                 .split(" ")[4];
     }
-
     public static Map<String, String> parseInfo(Document doc) {
         return doc
                 .select(".specs_whole .specs_element")
@@ -123,7 +120,6 @@ public class Laptop {
                         Collectors.toMap(i -> (String) i[0], i -> (String) i[1])
                 );
     }
-
     public static Optional<Document> createDoc(String link) {
         try {
             return Optional.of(Jsoup
@@ -134,7 +130,6 @@ public class Laptop {
             return Optional.empty();
         }
     }
-
     public static Optional<Laptop> create(String link) {
         return createDoc(link).map(doc ->
                 new Laptop(
@@ -143,22 +138,21 @@ public class Laptop {
                         parseReviewDate(doc),
                         parsePicture(doc),
                         parseModel(doc),
-                        parseReviewVersion(doc)
-//                        parseInfo(doc)
+                        parseReviewVersion(doc),
+                        parseInfo(doc)
                 )
         );
     }
 
-//    @Override
-//    public String toString() {
-//        return "Laptop[" +
-//                "link=" + link + ", " +
-//                "reviewer=" + reviewer + ", " +
-//                "reviewDate=" + reviewDate + ", " +
-//                "picture=" + picture + ", " +
-//                "model=" + model + ", " +
-//                "reviewVersion=" + reviewVersion + ", " +
-//                "info=" + "info" + ']';
-//    }
+    @Override
+    public String toString() {
+        return "Laptop[" +
+                "link=" + link + ", " +
+                "reviewer=" + reviewer + ", " +
+                "reviewDate=" + reviewDate + ", " +
+                "picture=" + picture + ", " +
+                "model=" + model + ", " +
+                "reviewVersion=" + reviewVersion;
+    }
 
 }

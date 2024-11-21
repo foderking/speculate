@@ -57,4 +57,10 @@ class SpeculateApplicationTests {
         var tmp = Laptop.createDoc(link).map(Laptop::parseReviewVersion);
         assertThat(tmp.get()).isNotEmpty();
     }
+    @ParameterizedTest
+    @MethodSource("data")
+    void parsingInfo(String link) {
+        var tmp = Laptop.createDoc(link).map(Laptop::parseInfo);
+        assertThat(tmp.get()).isNotEmpty();
+    }
 }
