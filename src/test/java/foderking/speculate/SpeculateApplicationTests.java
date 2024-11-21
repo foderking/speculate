@@ -30,31 +30,31 @@ class SpeculateApplicationTests {
     @ParameterizedTest
     @MethodSource("data")
     void parsingModel(String link) {
-        var tmp = Laptop.parse(link).map(Laptop::getModel);
+        var tmp = Laptop.createDoc(link).map(Laptop::parseModel);
         assertThat(tmp.get()).isNotEmpty();
     }
     @ParameterizedTest
     @MethodSource("data")
     void parsingPicture(String link) {
-        var tmp = Laptop.parse(link).map(Laptop::getPicture);
+        var tmp = Laptop.createDoc(link).map(Laptop::parsePicture);
         assertThat(tmp.get()).isNotEmpty();
     }
     @ParameterizedTest
     @MethodSource("data")
     void parsingDate(String link) {
-        var tmp = Laptop.parse(link).map(Laptop::getReviewDate);
+        var tmp = Laptop.createDoc(link).map(Laptop::parseReviewDate);
         assertThat(tmp.get()).isNotEmpty();
     }
     @ParameterizedTest
     @MethodSource("data")
     void parsingReviewer(String link) {
-        var tmp = Laptop.parse(link).map(Laptop::getReviewer);
+        var tmp = Laptop.createDoc(link).map(Laptop::parseReviewer);
         assertThat(tmp.get()).isNotEmpty();
     }
     @ParameterizedTest
     @MethodSource("data")
     void parsingReviewVersion(String link) {
-        var tmp = Laptop.parse(link).map(Laptop::getReviewVersion);
+        var tmp = Laptop.createDoc(link).map(Laptop::parseReviewVersion);
         assertThat(tmp.get()).isNotEmpty();
     }
 }
