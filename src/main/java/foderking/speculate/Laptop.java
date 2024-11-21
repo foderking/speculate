@@ -104,7 +104,7 @@ public class Laptop {
     }
     public static Map<String, String> parseInfo(Document doc) {
         return doc
-                .select(".specs_whole .specs_element")
+                .select(".specs_whole > .specs_element")
                 .stream()
                 .filter(
                         e -> !e.hasAttr("style")
@@ -117,7 +117,7 @@ public class Laptop {
                                 .toArray()
                 )
                 .collect(
-                        Collectors.toMap(i -> (String) i[0], i -> (String) i[1])
+                        Collectors.toMap(i -> (String) i[0], i -> (String) (i.length>1 ? i[1] : ""))
                 );
     }
     public static Optional<Document> createDoc(String link) {
