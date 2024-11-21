@@ -27,6 +27,7 @@ public class Laptop {
     private String reviewVersion;
     @ElementCollection
     private Map<String, String> info;
+    private Integer rating;
 
     public Laptop(
             String link,
@@ -35,7 +36,8 @@ public class Laptop {
             String picture,
             String model,
             String reviewVersion,
-            Map<String, String> info
+            Map<String, String> info,
+            Integer rating
     ) {
         this.link = link;
         this.reviewer = reviewer;
@@ -44,6 +46,7 @@ public class Laptop {
         this.model = model;
         this.reviewVersion = reviewVersion;
         this.info = info;
+        this.rating = rating;
     }
 
     public Laptop() {
@@ -120,6 +123,15 @@ public class Laptop {
                         Collectors.toMap(i -> (String) i[0], i -> (String) (i.length>1 ? i[1] : ""))
                 );
     }
+    public static Integer parseRating(Document doc) {
+        return Integer.parseInt(
+            doc
+                .select("#tspan4350")
+                .text()
+                .split("%[)]")[0]
+                .split("[(]")[1]
+        );
+    }
     public static Optional<Document> createDoc(String link) {
         try {
             return Optional.of(Jsoup
@@ -139,7 +151,8 @@ public class Laptop {
                         parsePicture(doc),
                         parseModel(doc),
                         parseReviewVersion(doc),
-                        parseInfo(doc)
+                        parseInfo(doc),
+                        parseRating(doc)
                 )
         );
     }
