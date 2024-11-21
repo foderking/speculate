@@ -52,7 +52,7 @@ public class Laptop {
     public static String parseReviewer(Document doc) {
         // reviews below v8 are parsed differently
         Elements intro_author = doc.select(".intro-author");
-        if (intro_author.size() > 0) {
+        if (!intro_author.isEmpty()) {
             return intro_author
                     .first()
                     .text()
@@ -78,7 +78,7 @@ public class Laptop {
     public static String parsePicture(Document doc) {
         // reviews below v8 are parsed differently
         Elements orig = doc.select(".csc-textpic-above");
-        if (orig.size() > 0) {
+        if (!orig.isEmpty()) {
             return orig
                     .first()
                     .select("div:nth-child(1) > div:nth-child(1) > figure:nth-child(1) > img:nth-child(1)")
@@ -152,7 +152,7 @@ public class Laptop {
                 "reviewDate=" + reviewDate + ", " +
                 "picture=" + picture + ", " +
                 "model=" + model + ", " +
-                "reviewVersion=" + reviewVersion;
+                "reviewVersion=" + reviewVersion + "," + info.toString();
     }
 
 }
