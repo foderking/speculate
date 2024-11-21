@@ -59,6 +59,12 @@ public record Laptop(
                 .text()
                 .split(" [(]")[0];
     }
+    public static String getReviewVersion(Document doc){
+        return doc
+                .select("#tspan4368")
+                .text()
+                .split(" ")[4];
+    }
     public static Map<String, String> getInfo(Document doc){
         return doc
                 .select(".specs_whole .specs_element")

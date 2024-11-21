@@ -1,11 +1,9 @@
 package foderking.speculate;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.boot.test.context.SpringBootTest;
 import static org.assertj.core.api.Assertions.assertThat;
-import java.util.List;
 import java.util.stream.Stream;
 
 @SpringBootTest
@@ -51,6 +49,12 @@ class SpeculateApplicationTests {
     @MethodSource("data")
     void parsingReviewer(String link) {
         var tmp = Laptop.parse(link).map(Laptop::getReviewer);
+        assertThat(tmp.get()).isNotEmpty();
+    }
+    @ParameterizedTest
+    @MethodSource("data")
+    void parsingReviewVersion(String link) {
+        var tmp = Laptop.parse(link).map(Laptop::getReviewVersion);
         assertThat(tmp.get()).isNotEmpty();
     }
 }
