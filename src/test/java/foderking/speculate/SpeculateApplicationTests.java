@@ -3,10 +3,12 @@ package foderking.speculate;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import java.util.stream.Stream;
 
-@SpringBootTest
+@SpringBootTest()
 class SpeculateApplicationTests {
     private static Stream<String> data() {
         return Stream.of(
