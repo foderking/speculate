@@ -2,14 +2,11 @@ package foderking.speculate;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -23,13 +20,13 @@ public class Seeder implements CommandLineRunner {
     LaptopRepository repo;
     @Autowired
     HttpClient client;
-
     Logger logger = LoggerFactory.getLogger(Seeder.class);
 
     @Override
     public void run(String... args){
-
-        if (args.length == 1 && args[0] == "manual") {
+        logger.info("Started seeder");
+        if (args.length == 1 && args[0].equals("manual")) {
+            logger.info("running manual seed");
             List<String> links = List.of(
                     "https://www.notebookcheck.net/LG-gram-Pro-2-in-1-16T90SP-review-Light-and-powerful.850220.0.html",
                     "https://www.notebookcheck.net/Apple-MacBook-Pro-16-2024-review-Enormous-battery-life-and-better-performance-of-the-M4-Pro.917793.0.html",
@@ -48,8 +45,8 @@ public class Seeder implements CommandLineRunner {
                     });
             System.out.println("boobs");
         }
-        else if (args.length == 1 && args[0] == "update") {
-            logger.info("running generic seed");
+        else if (args.length == 1 && args[0].equals("update")) {
+            logger.info("running update seed");
             Optional<Document> body = parseMinimal().map(Jsoup::parse);
             logger.info("front page downloaded");
             if (body.isPresent()) {
@@ -68,6 +65,7 @@ public class Seeder implements CommandLineRunner {
             }
         }
         else{
+            logger.info("running no seed");
         }
     }
 
