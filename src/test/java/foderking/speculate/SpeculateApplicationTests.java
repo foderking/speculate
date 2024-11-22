@@ -108,6 +108,50 @@ class SpeculateApplicationTests {
             ).isLessThan(5);
         }
     }
+    @ParameterizedTest
+    @MethodSource("data")
+    void parsingThickness(String link) {
+        Document doc = Laptop.createDoc(link).get();
+        Optional<Element> svg_node = Laptop.selectDimensionSVG(doc);
+        if (svg_node.isPresent()) {
+            assertThat(
+                svg_node
+                    .map(Laptop::parseThickness)
+                    .get()
+            ).isGreaterThan(0f);
+        }
+        else {
+            assertThat(
+                Integer.parseInt(
+                    Laptop
+                        .parseReviewVersion(doc)
+                        .substring(1)
+                )
+            ).isLessThan(5);
+        }
+    }
+    @ParameterizedTest
+    @MethodSource("data")
+    void parsingWidth(String link) {
+        Document doc = Laptop.createDoc(link).get();
+        Optional<Element> svg_node = Laptop.selectDimensionSVG(doc);
+        if (svg_node.isPresent()) {
+            assertThat(
+                svg_node
+                    .map(Laptop::parseWidth)
+                    .get()
+            ).isGreaterThan(0f);
+        }
+        else {
+            assertThat(
+                Integer.parseInt(
+                    Laptop
+                        .parseReviewVersion(doc)
+                        .substring(1)
+                )
+            ).isLessThan(5);
+        }
+    }
 }
 
 // TODO convert version_number to integer
