@@ -32,7 +32,7 @@ public class Laptop implements Serializable {
     @ElementCollection
     private Map<String, String> info;
     private Integer rating;
-    private float length;
+//    private float length;
 
     public String getModel() {
         return model;
@@ -58,8 +58,8 @@ public class Laptop implements Serializable {
             String model,
             String reviewVersion,
             Map<String, String> info,
-            Integer rating,
-            float length
+            Integer rating//,
+//            float length
     ) {
         this.link = link;
         this.reviewer = reviewer;
@@ -69,7 +69,7 @@ public class Laptop implements Serializable {
         this.reviewVersion = reviewVersion;
         this.info = info;
         this.rating = rating;
-        this.length = length;
+//        this.length = length;
     }
 
     public Laptop() {
@@ -163,7 +163,22 @@ public class Laptop implements Serializable {
                 .max(Float::compareTo)
                 .get();
     }
-
+    public static Float parseThickness(Element dimension_svg){
+        return  dimension_svg
+                .select("rect")
+                .eachAttr("width")
+                .stream().map(Float::parseFloat)
+                .min(Float::compareTo)
+                .get();
+    }
+    public static Float parseWidth(Element dimension_svg){
+        return Float.parseFloat(
+            dimension_svg
+                .select("rect")
+                .eachAttr("height")
+                .getFirst()
+        );
+    }
     public static Optional<Document> createDoc(String link) {
         try {
             return Optional.of(Jsoup
@@ -191,7 +206,7 @@ public class Laptop implements Serializable {
     }
     public static Optional<Laptop> create(String link) {
         return createDoc(link).map(doc -> {
-            Optional<Element> svg_node = selectDimensionSVG(doc);
+//            Optional<Element> svg_node = selectDimensionSVG(doc);
             return new Laptop(
                     link,
                     Laptop.parseReviewer(doc),
@@ -200,10 +215,10 @@ public class Laptop implements Serializable {
                     parseModel(doc),
                     parseReviewVersion(doc),
                     parseInfo(doc),
-                    parseRating(doc),
-                    svg_node
-                        .map(Laptop::parseLength)
-                        .orElse(0f)
+                    parseRating(doc)//,
+//                    svg_node
+//                        .map(Laptop::parseLength)
+//                        .orElse(0f)
             );
         });
     }
