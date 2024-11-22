@@ -1,11 +1,13 @@
 package foderking.speculate;
 
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
-
 import static org.assertj.core.api.Assertions.assertThat;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 @SpringBootTest()
@@ -16,8 +18,12 @@ class SpeculateApplicationTests {
             "https://www.notebookcheck.net/LG-gram-Pro-2-in-1-16T90SP-review-Light-and-powerful.850220.0.html",
             "https://www.notebookcheck.net/Dell-XPS-17-9730-laptop-review-GeForce-RTX-4070-multimedia-monster.719622.0.html",
             "https://www.notebookcheck.net/Lenovo-ThinkPad-X1-Carbon-G6-2018-i5-8350U-Full-HD-Touch-256GB-Laptop-Review.331428.0.html",
+            // v3 (archived)
+            "https://www.notebookcheck.net/Review-Lenovo-ThinkPad-S540-20B30059GE-Ultrabook.111259.0.html",
+            "https://www.notebookcheck.net/Review-Acer-Aspire-E1-470P-6659-Notebook.108284.0.html",
             // v4
             "https://www.notebookcheck.net/Dell-Inspiron-17-5758-Notebook-Review.149952.0.html",
+            "https://www.notebookcheck.net/Acer-Aspire-E13-ES1-311-Notebook-Review.138907.0.html", // archived
             // v6
             "https://www.notebookcheck.net/Eurocom-Nightsky-RX15-Clevo-PB51RF-Core-i9-4K-OLED-Laptop-Review.431869.0.html",
             "https://www.notebookcheck.net/MSI-GP65-Leopard-9SE-Laptop-Review-The-best-screen-on-a-mid-tier-gaming-laptop.431863.0.html",
@@ -33,43 +39,75 @@ class SpeculateApplicationTests {
     @ParameterizedTest
     @MethodSource("data")
     void parsingModel(String link) {
-        var tmp = Laptop.createDoc(link).map(Laptop::parseModel);
-        assertThat(tmp.get()).isNotEmpty();
+        Document doc = Laptop.createDoc(link).get();
+        String model = Laptop.parseModel(doc);
+        assertThat(model).isNotEmpty();
     }
     @ParameterizedTest
     @MethodSource("data")
     void parsingPicture(String link) {
-        var tmp = Laptop.createDoc(link).map(Laptop::parsePicture);
-        assertThat(tmp.get()).isNotEmpty();
+        Document doc = Laptop.createDoc(link).get();
+        String picture = Laptop.parsePicture(doc);
+        assertThat(picture).isNotEmpty();
     }
     @ParameterizedTest
     @MethodSource("data")
     void parsingDate(String link) {
-        var tmp = Laptop.createDoc(link).map(Laptop::parseReviewDate);
-        assertThat(tmp.get()).isNotEmpty();
+        Document doc = Laptop.createDoc(link).get();
+        String date  = Laptop.parseReviewDate(doc);
+        assertThat(date).isNotEmpty();
     }
     @ParameterizedTest
     @MethodSource("data")
     void parsingReviewer(String link) {
-        var tmp = Laptop.createDoc(link).map(Laptop::parseReviewer);
-        assertThat(tmp.get()).isNotEmpty();
+        Document doc = Laptop.createDoc(link).get();
+        String reviewer = Laptop.parseReviewer(doc);
+        assertThat(reviewer).isNotEmpty();
     }
     @ParameterizedTest
     @MethodSource("data")
     void parsingReviewVersion(String link) {
-        var tmp = Laptop.createDoc(link).map(Laptop::parseReviewVersion);
-        assertThat(tmp.get()).isNotEmpty();
+        Document doc = Laptop.createDoc(link).get();
+        String review_version = Laptop.parseReviewVersion(doc);
+        assertThat(review_version).isNotEmpty();
     }
     @ParameterizedTest
     @MethodSource("data")
     void parsingInfo(String link) {
-        var tmp = Laptop.createDoc(link).map(Laptop::parseInfo);
-        assertThat(tmp.get()).isNotEmpty();
+        Document doc = Laptop.createDoc(link).get();
+        Map<String, String> info = Laptop.parseInfo(doc);
+        assertThat(info.size()).isGreaterThan(0);
     }
     @ParameterizedTest
     @MethodSource("data")
     void parsingRating(String link) {
-        var tmp = Laptop.createDoc(link).map(Laptop::parseRating);
-        assertThat(tmp.get()).isGreaterThan(0);
+        Document doc = Laptop.createDoc(link).get();
+        Integer rating = Laptop.parseRating(doc);
+        assertThat(rating).isGreaterThan(0);
+    }
+    @ParameterizedTest
+    @MethodSource("data")
+    void parsingLength(String link) {
+        Document doc = Laptop.createDoc(link).get();
+        Optional<Element> svg_node = Laptop.selectDimensionSVG(doc);
+        // reviews below version 5 appear not to have dimensions
+        if (svg_node.isPresent()) {
+            assertThat(
+                svg_node
+                    .map(Laptop::parseLength)
+                    .get()
+            ).isGreaterThan(0f);
+        }
+        else {
+            assertThat(
+                Integer.parseInt(
+                    Laptop
+                        .parseReviewVersion(doc)
+                        .substring(1)
+                )
+            ).isLessThan(5);
+        }
     }
 }
+
+// TODO convert version_number to integer

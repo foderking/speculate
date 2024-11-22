@@ -10,15 +10,19 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import java.io.IOException;
+import java.io.Serializable;
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.Map;
 
 @Entity
-public class Laptop {
+public class Laptop implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    public Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    public UUID id;
     private String link;
     private String reviewer;
     private String reviewDate;
@@ -28,6 +32,23 @@ public class Laptop {
     @ElementCollection
     private Map<String, String> info;
     private Integer rating;
+    private float length;
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public Integer getRating() {
+        return rating;
+    }
+
+    public void setRating(Integer rating) {
+        this.rating = rating;
+    }
 
     public Laptop(
             String link,
@@ -37,7 +58,8 @@ public class Laptop {
             String model,
             String reviewVersion,
             Map<String, String> info,
-            Integer rating
+            Integer rating,
+            float length
     ) {
         this.link = link;
         this.reviewer = reviewer;
@@ -47,6 +69,7 @@ public class Laptop {
         this.reviewVersion = reviewVersion;
         this.info = info;
         this.rating = rating;
+        this.length = length;
     }
 
     public Laptop() {
@@ -132,6 +155,15 @@ public class Laptop {
                 .split("[(]")[1]
         );
     }
+    public static Float parseLength(Element dimension_svg){
+        return  dimension_svg
+                .select("rect")
+                .eachAttr("width")
+                .stream().map(Float::parseFloat)
+                .max(Float::compareTo)
+                .get();
+    }
+
     public static Optional<Document> createDoc(String link) {
         try {
             return Optional.of(Jsoup
@@ -142,19 +174,38 @@ public class Laptop {
             return Optional.empty();
         }
     }
+    public static Optional<Element> selectDimensionSVG(Document doc) {
+        Elements comparison_labels = doc
+                .select("div.csc-default div.nbc_element span[style] > label");
+        return comparison_labels.stream()
+                .filter(e -> e.childrenSize() == 2)
+                .findFirst()
+                .map( (Element e) -> {
+                    String id = e.attr("for").split("_")[1];
+                    String svg_id = "g#showDeviceSize_" + id;
+                    return doc.selectFirst(svg_id);
+                });
+    }
+    public static Elements selectStatsNode(Document doc){
+        return doc.select("div.ttcl_0 div.nbc_element");
+    }
     public static Optional<Laptop> create(String link) {
-        return createDoc(link).map(doc ->
-                new Laptop(
-                        link,
-                        Laptop.parseReviewer(doc),
-                        parseReviewDate(doc),
-                        parsePicture(doc),
-                        parseModel(doc),
-                        parseReviewVersion(doc),
-                        parseInfo(doc),
-                        parseRating(doc)
-                )
-        );
+        return createDoc(link).map(doc -> {
+            Optional<Element> svg_node = selectDimensionSVG(doc);
+            return new Laptop(
+                    link,
+                    Laptop.parseReviewer(doc),
+                    parseReviewDate(doc),
+                    parsePicture(doc),
+                    parseModel(doc),
+                    parseReviewVersion(doc),
+                    parseInfo(doc),
+                    parseRating(doc),
+                    svg_node
+                        .map(Laptop::parseLength)
+                        .orElse(0f)
+            );
+        });
     }
 
     @Override
