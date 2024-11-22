@@ -15,6 +15,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.Map;
+import java.util.HashMap;
 
 @Entity
 public class Laptop implements Serializable {
@@ -279,6 +280,33 @@ public class Laptop implements Serializable {
                     String svg_id = "g#showDeviceSize_" + id;
                     return doc.selectFirst(svg_id);
                 });
+    }
+    public static Map<String, String> selectCompareTables(Document doc){
+        HashMap<String, String> root_hashmap = new HashMap();
+        Elements compared_tables = doc.select("table.comparetable");
+        for (Element compared_table: compared_tables){
+            String key = "";
+            for(Element tr: compared_table.select("tr")){ // assumes order!
+                if (tr.hasClass("tr-even") || tr.hasClass("tr-odd")){
+                    root_hashmap
+                        .put(
+                            key + ":" + tr.child(0).text(),
+                            tr.child(1).text().split(" ")[0]
+                        );
+                }
+                else {
+                    key = tr.child(0).text();
+                }
+            }
+        }
+        return root_hashmap;
+//        var tmp = doc.select("table.comparetable").stream().map(e-> e.select("tr[class]").stream().limit(2).toArray()).toArray();
+//        return doc
+//                .select("table.comparetable tr[class]")
+//                .stream()
+//                .collect(
+//                    Collectors.toMap( tr -> tr.child(0).text(), tr -> tr.child(1).text().split(" ")[0] )
+//                );
     }
     public static Elements selectStatsNode(Document doc){
         return doc.select("div.ttcl_0 div.nbc_element");
