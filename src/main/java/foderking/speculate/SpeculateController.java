@@ -12,7 +12,7 @@ public class SpeculateController {
     @Autowired
     LaptopRepository repo;
 
-    @GetMapping(value = "/link")
+    @GetMapping(value = "/query")
     public Optional<Laptop> index(@RequestParam String link){
         return Laptop.create(link);
     }
