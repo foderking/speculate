@@ -1,5 +1,6 @@
 package foderking.speculate;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -8,7 +9,10 @@ import java.util.Optional;
 
 @Controller
 public class SpeculateController {
-    @GetMapping
+    @Autowired
+    LaptopRepository repo;
+
+    @GetMapping(value = "/link")
     public Optional<Laptop> index(@RequestParam String link){
         return Laptop.create(link);
     }
@@ -20,7 +24,9 @@ public class SpeculateController {
     }
     @PostMapping(value="/filter")
     public String postTemplate(@ModelAttribute("filter") Filter f, Model model){
+        Iterable<Laptop> tmp = repo.findAllByRatingGreaterThanEqual(f.getRating());
         model.addAttribute("version",f.getVersion());
+        model.addAttribute("laptops",tmp);
         return "template";
     }
 }

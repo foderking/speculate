@@ -6,5 +6,13 @@
 </head>
 <body>
     <p th:text="${version}" />
+    <table>
+    <tbody>
+    <tr th:each="laptop: ${laptops}">
+        <td th:text="${laptop.model}" />
+        <td th:text="${laptop.rating}" />
+    </tr>
+    </tbody>
+    </table>
 </body>
 </html>

@@ -28,10 +28,8 @@ public class Seeder implements CommandLineRunner {
         if (args.length == 1 && args[0].equals("manual")) {
             logger.info("running manual seed");
             List<String> links = List.of(
-                    "https://www.notebookcheck.net/LG-gram-Pro-2-in-1-16T90SP-review-Light-and-powerful.850220.0.html",
-                    "https://www.notebookcheck.net/Apple-MacBook-Pro-16-2024-review-Enormous-battery-life-and-better-performance-of-the-M4-Pro.917793.0.html",
-                    "https://www.notebookcheck.net/Dell-XPS-17-9730-laptop-review-GeForce-RTX-4070-multimedia-monster.719622.0.html",
-                    "https://www.notebookcheck.net/Lenovo-ThinkPad-X1-Carbon-G6-2018-i5-8350U-Full-HD-Touch-256GB-Laptop-Review.331428.0.html"
+                    "https://www.notebookcheck.net/Gigabyte-G5-KF5-2024-laptop-review-RTX-4060-gaming-at-a-bargain-price-is-the-deal-worth-it.906622.0.html",
+                    "https://www.notebookcheck.net/MSI-Sword-16-HX-Laptop-Review-Gaming-powerhouse-stifled-by-an-unimpressive-screen.888247.0.html"
             );
             links
                     .stream()

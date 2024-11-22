@@ -12,6 +12,16 @@ public class Filter implements Serializable {
     }
 
     private String version;
+
+    public Integer getRating() {
+        return rating;
+    }
+
+    public void setRating(Integer rating) {
+        this.rating = rating;
+    }
+
+    private Integer rating;
 //    public Filter(String version_number) {
 //        this.version_number = version_number;
 //    }
