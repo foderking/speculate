@@ -179,6 +179,18 @@ public class Laptop implements Serializable {
                 .getFirst()
         );
     }
+    public static Float parseWeight(Element dimension_svg){
+        return Float.parseFloat(
+                dimension_svg
+                    .select("text[text-anchor]")
+                    .eachText()
+                    .stream()
+                    .filter(e -> e.endsWith("kg"))
+                    .findFirst()
+                    .get()
+                    .split(" ")[0]
+        );
+    }
     public static Optional<Document> createDoc(String link) {
         try {
             return Optional.of(Jsoup
