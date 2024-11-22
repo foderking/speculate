@@ -16,7 +16,6 @@ public class SpeculateController {
     public Optional<Laptop> index(@RequestParam String link){
         return Laptop.create(link);
     }
-
     @GetMapping(value="/filter")
     public String getTemplate(Model model){
         model.addAttribute("filter", new Filter());

@@ -34,18 +34,51 @@ public class Laptop implements Serializable {
     private Integer rating;
 //    private float length;
 
+    public Map<String, String> getInfo() {
+        return info;
+    }
+    public void setInfo(Map<String, String> info) {
+        this.info = info;
+    }
+    public String getReviewVersion() {
+        return reviewVersion;
+    }
+    public void setReviewVersion(String reviewVersion) {
+        this.reviewVersion = reviewVersion;
+    }
+    public String getPicture() {
+        return picture;
+    }
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+    public String getReviewDate() {
+        return reviewDate;
+    }
+    public void setReviewDate(String reviewDate) {
+        this.reviewDate = reviewDate;
+    }
+    public String getReviewer() {
+        return reviewer;
+    }
+    public void setReviewer(String reviewer) {
+        this.reviewer = reviewer;
+    }
+    public String getLink() {
+        return link;
+    }
+    public void setLink(String link) {
+        this.link = link;
+    }
     public String getModel() {
         return model;
     }
-
     public void setModel(String model) {
         this.model = model;
     }
-
     public Integer getRating() {
         return rating;
     }
-
     public void setRating(Integer rating) {
         this.rating = rating;
     }
