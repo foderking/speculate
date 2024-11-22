@@ -68,8 +68,8 @@ class SpeculateApplicationTests {
     @MethodSource("data")
     void parsingReviewVersion(String link) {
         Document doc = Laptop.createDoc(link).get();
-        String review_version = Laptop.parseReviewVersion(doc);
-        assertThat(review_version).isNotEmpty();
+        int review_version = Laptop.parseReviewVersion(doc);
+        assertThat(review_version).isGreaterThan(0);
     }
     @ParameterizedTest
     @MethodSource("data")
@@ -99,13 +99,7 @@ class SpeculateApplicationTests {
             ).isGreaterThan(0f);
         }
         else {
-            assertThat(
-                Integer.parseInt(
-                    Laptop
-                        .parseReviewVersion(doc)
-                        .substring(1)
-                )
-            ).isLessThan(5);
+            assertThat(Laptop.parseReviewVersion(doc)).isLessThan(5);
         }
     }
     @ParameterizedTest
@@ -121,13 +115,7 @@ class SpeculateApplicationTests {
             ).isGreaterThan(0f);
         }
         else {
-            assertThat(
-                Integer.parseInt(
-                    Laptop
-                        .parseReviewVersion(doc)
-                        .substring(1)
-                )
-            ).isLessThan(5);
+            assertThat(Laptop.parseReviewVersion(doc)).isLessThan(5);
         }
     }
     @ParameterizedTest
@@ -143,13 +131,7 @@ class SpeculateApplicationTests {
             ).isGreaterThan(0f);
         }
         else {
-            assertThat(
-                Integer.parseInt(
-                    Laptop
-                        .parseReviewVersion(doc)
-                        .substring(1)
-                )
-            ).isLessThan(5);
+            assertThat(Laptop.parseReviewVersion(doc)).isLessThan(5);
         }
     }
     @ParameterizedTest
@@ -165,15 +147,7 @@ class SpeculateApplicationTests {
             ).isGreaterThan(0f);
         }
         else {
-            assertThat(
-                Integer.parseInt(
-                    Laptop
-                        .parseReviewVersion(doc)
-                        .substring(1)
-                )
-            ).isLessThan(5);
+            assertThat(Laptop.parseReviewVersion(doc)).isLessThan(5);
         }
     }
 }
-
-// TODO convert version_number to integer

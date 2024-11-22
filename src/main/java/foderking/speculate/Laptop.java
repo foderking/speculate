@@ -11,10 +11,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.Map;
 
@@ -25,26 +23,53 @@ public class Laptop implements Serializable {
     public UUID id;
     private String link;
     private String reviewer;
-    private String reviewDate;
+    private String review_date;
     private String picture;
     private String model;
-    private String reviewVersion;
+    private int review_version;
     @ElementCollection
     private Map<String, String> info;
-    private Integer rating;
-//    private float length;
+    private int rating;
+    private float length;
+    private float width;
+    private float thickness;
+    private float weight;
 
+    public float getWeight() {
+        return weight;
+    }
+    public void setWeight(float weight) {
+        this.weight = weight;
+    }
+    public float getThickness() {
+        return thickness;
+    }
+    public void setThickness(float thickness) {
+        this.thickness = thickness;
+    }
+    public float getWidth() {
+        return width;
+    }
+    public void setWidth(float width) {
+        this.width = width;
+    }
+    public float getLength() {
+        return length;
+    }
+    public void setLength(float length) {
+        this.length = length;
+    }
     public Map<String, String> getInfo() {
         return info;
     }
     public void setInfo(Map<String, String> info) {
         this.info = info;
     }
-    public String getReviewVersion() {
-        return reviewVersion;
+    public int getReviewVersion() {
+        return review_version;
     }
-    public void setReviewVersion(String reviewVersion) {
-        this.reviewVersion = reviewVersion;
+    public void setReviewVersion(int review_version) {
+        this.review_version = review_version;
     }
     public String getPicture() {
         return picture;
@@ -53,10 +78,10 @@ public class Laptop implements Serializable {
         this.picture = picture;
     }
     public String getReviewDate() {
-        return reviewDate;
+        return review_date;
     }
-    public void setReviewDate(String reviewDate) {
-        this.reviewDate = reviewDate;
+    public void setReviewDate(String review_date) {
+        this.review_date = review_date;
     }
     public String getReviewer() {
         return reviewer;
@@ -76,7 +101,7 @@ public class Laptop implements Serializable {
     public void setModel(String model) {
         this.model = model;
     }
-    public Integer getRating() {
+    public int getRating() {
         return rating;
     }
     public void setRating(Integer rating) {
@@ -86,23 +111,29 @@ public class Laptop implements Serializable {
     public Laptop(
             String link,
             String reviewer,
-            String reviewDate,
+            String review_date,
             String picture,
             String model,
-            String reviewVersion,
+            int review_version,
             Map<String, String> info,
-            Integer rating//,
-//            float length
+            int rating,
+            float length,
+            float width,
+            float thickness,
+            float weight
     ) {
         this.link = link;
         this.reviewer = reviewer;
-        this.reviewDate = reviewDate;
+        this.review_date = review_date;
         this.picture = picture;
         this.model = model;
-        this.reviewVersion = reviewVersion;
+        this.review_version = review_version;
         this.info = info;
         this.rating = rating;
-//        this.length = length;
+        this.length = length;
+        this.width = width;
+        this.thickness = thickness;
+        this.weight = weight;
     }
 
     public Laptop() {
@@ -155,11 +186,14 @@ public class Laptop implements Serializable {
                 .text()
                 .split(" [(]")[0];
     }
-    public static String parseReviewVersion(Document doc) {
-        return doc
-                .select("#tspan4368")
-                .text()
-                .split(" ")[4];
+    public static int parseReviewVersion(Document doc) {
+        return Integer.parseInt(
+            doc
+            .select("#tspan4368")
+            .text()
+            .split(" ")[4]
+            .substring(1)
+        );
     }
     public static Map<String, String> parseInfo(Document doc) {
         return doc
@@ -179,7 +213,7 @@ public class Laptop implements Serializable {
                         Collectors.toMap(i -> (String) i[0], i -> (String) (i.length>1 ? i[1] : ""))
                 );
     }
-    public static Integer parseRating(Document doc) {
+    public static int parseRating(Document doc) {
         return Integer.parseInt(
             doc
                 .select("#tspan4350")
@@ -188,7 +222,7 @@ public class Laptop implements Serializable {
                 .split("[(]")[1]
         );
     }
-    public static Float parseLength(Element dimension_svg){
+    public static float parseLength(Element dimension_svg){
         return  dimension_svg
                 .select("rect")
                 .eachAttr("width")
@@ -196,7 +230,7 @@ public class Laptop implements Serializable {
                 .max(Float::compareTo)
                 .get();
     }
-    public static Float parseThickness(Element dimension_svg){
+    public static float parseThickness(Element dimension_svg){
         return  dimension_svg
                 .select("rect")
                 .eachAttr("width")
@@ -204,7 +238,7 @@ public class Laptop implements Serializable {
                 .min(Float::compareTo)
                 .get();
     }
-    public static Float parseWidth(Element dimension_svg){
+    public static float parseWidth(Element dimension_svg){
         return Float.parseFloat(
             dimension_svg
                 .select("rect")
@@ -212,7 +246,7 @@ public class Laptop implements Serializable {
                 .getFirst()
         );
     }
-    public static Float parseWeight(Element dimension_svg){
+    public static float parseWeight(Element dimension_svg){
         return Float.parseFloat(
                 dimension_svg
                     .select("text[text-anchor]")
@@ -251,7 +285,7 @@ public class Laptop implements Serializable {
     }
     public static Optional<Laptop> create(String link) {
         return createDoc(link).map(doc -> {
-//            Optional<Element> svg_node = selectDimensionSVG(doc);
+            Optional<Element> svg_node = selectDimensionSVG(doc);
             return new Laptop(
                     link,
                     Laptop.parseReviewer(doc),
@@ -260,10 +294,19 @@ public class Laptop implements Serializable {
                     parseModel(doc),
                     parseReviewVersion(doc),
                     parseInfo(doc),
-                    parseRating(doc)//,
-//                    svg_node
-//                        .map(Laptop::parseLength)
-//                        .orElse(0f)
+                    parseRating(doc),
+                    svg_node
+                        .map(Laptop::parseLength)
+                        .orElse(-1f),
+                    svg_node
+                        .map(Laptop::parseWidth)
+                        .orElse(-1f),
+                    svg_node
+                        .map(Laptop::parseThickness)
+                        .orElse(-1f),
+                    svg_node
+                        .map(Laptop::parseWeight)
+                        .orElse(-1f)
             );
         });
     }
@@ -273,10 +316,10 @@ public class Laptop implements Serializable {
         return "Laptop[" +
                 "link=" + link + ", " +
                 "reviewer=" + reviewer + ", " +
-                "reviewDate=" + reviewDate + ", " +
+                "reviewDate=" + review_date + ", " +
                 "picture=" + picture + ", " +
                 "model=" + model + ", " +
-                "reviewVersion=" + reviewVersion + "," + info.toString();
+                "reviewVersion=" + review_version;
     }
 
 }
