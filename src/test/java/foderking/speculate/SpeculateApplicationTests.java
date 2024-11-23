@@ -158,6 +158,15 @@ class SpeculateApplicationTests {
         List<String> display_infos = Laptop.parseDisplayInfo(doc);
         assertThat(display_infos).isNotEmpty();
     }
+    @ParameterizedTest
+    @MethodSource("data")
+    void parsingTemperatureInfo(String link){
+        Document doc = Laptop.createDoc(link).get();
+        var temperature_info = Laptop.parseTemperatureInfo(doc);
+        assertThat(temperature_info).isNotEmpty();
+        temperature_info.values().forEach(e -> assertThat(e.length).isGreaterThanOrEqualTo(4));
+    }
+
 //    @ParameterizedTest
 //    @MethodSource("data")
 //    void parsingCompareTables(String link){
