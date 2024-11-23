@@ -269,13 +269,6 @@ public class Laptop implements Serializable {
                 .stream().map(TextNode::text).toList();
     }
     public static Map<String, Object[]> parseTemperatureInfo(Document doc){
-//        var tmp = doc.select("div.tx-nbc2fe-pi1 td.nbc2rdisplay_avgmax");
-//        var tmp = doc
-//                .select("div.nbc2rdisplay_smenu")
-//                .stream()
-//                .map((Element smenu) -> {
-//                    return 2;
-//                });
         return doc
                     .select("div.nbc2rdisplay_smenu div[style=\";padding:5px;margin-bottom:5px;background-color:#ababab\"]")
                     .stream()
