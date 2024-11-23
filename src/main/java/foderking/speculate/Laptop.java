@@ -339,16 +339,17 @@ public class Laptop implements Serializable {
         HashMap<String, String> root_hashmap = new HashMap();
         Elements compared_bars = doc.select("table.r_compare_bars");
         for (Element compared_bar: compared_bars){
-            String key = "";
+            String prefix = compared_bar.selectFirst("td.prog_header").text();
+            String key = prefix; // some don't have keys
             for (Element tr: compared_bar.select("tr")){
                 if (tr.child(0).hasClass("settings_header")){
-                    key = tr.child(0).text();
+                    key = prefix + ":" + tr.child(0).text();
                 }
                 else if (tr.hasClass("referencespecs")) {
                     root_hashmap
                     .put(
                         key,
-                        tr.select(" td.bar span.r_compare_bars_value").child(0).text()
+                        tr.selectFirst(" td.bar span.r_compare_bars_value").child(0).text()
                     );
                 }
                 else {}
