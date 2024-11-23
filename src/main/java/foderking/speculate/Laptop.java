@@ -7,12 +7,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.TextNode;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.Map;
 import java.util.HashMap;
@@ -259,6 +261,13 @@ public class Laptop implements Serializable {
                     .split(" ")[0]
         );
     }
+    public static List<String> parseDisplayInfo(Document doc){
+        return doc
+                .select("div.auto_analysis")
+                .getFirst()
+                .textNodes()
+                .stream().map(TextNode::text).toList();
+    }
     public static Optional<Document> createDoc(String link) {
         try {
             return Optional.of(Jsoup
@@ -300,13 +309,6 @@ public class Laptop implements Serializable {
             }
         }
         return root_hashmap;
-//        var tmp = doc.select("table.comparetable").stream().map(e-> e.select("tr[class]").stream().limit(2).toArray()).toArray();
-//        return doc
-//                .select("table.comparetable tr[class]")
-//                .stream()
-//                .collect(
-//                    Collectors.toMap( tr -> tr.child(0).text(), tr -> tr.child(1).text().split(" ")[0] )
-//                );
     }
     public static Elements selectStatsNode(Document doc){
         return doc.select("div.ttcl_0 div.nbc_element");
