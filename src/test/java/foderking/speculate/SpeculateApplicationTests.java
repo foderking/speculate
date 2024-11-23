@@ -166,16 +166,19 @@ class SpeculateApplicationTests {
         assertThat(temperature_info).isNotEmpty();
         temperature_info.values().forEach(e -> assertThat(e.length).isGreaterThanOrEqualTo(4));
     }
+    @ParameterizedTest
+    @MethodSource("data")
+    void parsingCompareBars(String link){
+        Document doc = Laptop.createDoc(link).get();
+        var dict = Laptop.selectCompareBars(doc);
+        assertThat(dict).isNotEmpty();
+    }
 
-//    @ParameterizedTest
-//    @MethodSource("data")
-//    void parsingCompareTables(String link){
-//        Document doc = Laptop.createDoc(link).get();
-//        var dict = Laptop.selectCompareTables(doc);
-//        if (dict.size() > 0) {
-////            assertThat(dict.containsKey("Display:Display P3 Coverage")).isTrue();
-//            assertThat(dict.containsKey("Display:sRGB Coverage")).isTrue();
-//            assertThat(dict.containsKey("Display:AdobeRGB 1998 Coverage")).isTrue();
-//        }
-//    }
+    @ParameterizedTest
+    @MethodSource("data")
+    void parsingCompareTables(String link){
+        Document doc = Laptop.createDoc(link).get();
+        var dict = Laptop.selectCompareTables(doc);
+        assertThat(dict).isNotEmpty();
+    }
 }
