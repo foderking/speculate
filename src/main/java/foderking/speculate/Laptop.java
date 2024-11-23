@@ -335,6 +335,28 @@ public class Laptop implements Serializable {
         }
         return root_hashmap;
     }
+    public static Map<String, String> selectCompareBars(Document doc){
+        HashMap<String, String> root_hashmap = new HashMap();
+        Elements compared_bars = doc.select("table.r_compare_bars");
+        for (Element compared_bar: compared_bars){
+            String key = "";
+            for (Element tr: compared_bar.select("tr")){
+                if (tr.child(0).hasClass("settings_header")){
+                    key = tr.child(0).text();
+                }
+                else if (tr.hasClass("referencespecs")) {
+                    root_hashmap
+                    .put(
+                        key,
+                        tr.select(" td.bar span.r_compare_bars_value").child(0).text()
+                    );
+                }
+                else {}
+            }
+        }
+        return root_hashmap;
+
+    }
     public static Elements selectStatsNode(Document doc){
         return doc.select("div.ttcl_0 div.nbc_element");
     }
