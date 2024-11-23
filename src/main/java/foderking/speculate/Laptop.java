@@ -297,6 +297,7 @@ public class Laptop implements Serializable {
             return Optional.of(Jsoup
                     .connect(link)
                     .userAgent("Mozilla")
+                    .maxBodySize(0)
                     .get());
         } catch (IOException e) {
             return Optional.empty();
