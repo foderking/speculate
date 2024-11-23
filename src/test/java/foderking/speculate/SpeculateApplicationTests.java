@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Map;
 import java.util.Optional;
+import java.util.List;
 import java.util.stream.Stream;
 
 @SpringBootTest()
@@ -150,4 +151,22 @@ class SpeculateApplicationTests {
             assertThat(Laptop.parseReviewVersion(doc)).isLessThan(5);
         }
     }
+    @ParameterizedTest
+    @MethodSource("data")
+    void parsingDisplayInfo(String link){
+        Document doc = Laptop.createDoc(link).get();
+        List<String> display_infos = Laptop.parseDisplayInfo(doc);
+        assertThat(display_infos).isNotEmpty();
+    }
+//    @ParameterizedTest
+//    @MethodSource("data")
+//    void parsingCompareTables(String link){
+//        Document doc = Laptop.createDoc(link).get();
+//        var dict = Laptop.selectCompareTables(doc);
+//        if (dict.size() > 0) {
+////            assertThat(dict.containsKey("Display:Display P3 Coverage")).isTrue();
+//            assertThat(dict.containsKey("Display:sRGB Coverage")).isTrue();
+//            assertThat(dict.containsKey("Display:AdobeRGB 1998 Coverage")).isTrue();
+//        }
+//    }
 }
