@@ -1,10 +1,6 @@
 package foderking.speculate;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.TextNode;
@@ -12,12 +8,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.Map;
-import java.util.HashMap;
 
 @Entity
 public class Laptop implements Serializable {
@@ -37,17 +29,31 @@ public class Laptop implements Serializable {
     private float width;
     private float thickness;
     private float weight;
+    @Column(name = "max_temperature_load")
+    private float max_temperature_load;
+    @Column(name = "max_temperature_idle")
+    private float max_temperature_idle;
 
     @ElementCollection
     private List<String> display_info;
-    @ElementCollection
-    private Map<String, Integer>  temperature_info;
     @ElementCollection
     private Map<String, String> compare_tables;
     @ElementCollection
     private Map<String, String> compare_bars;
 
 
+    public float getMaxTemperatureLoad(){
+        return max_temperature_load;
+    }
+    public void setMaxTemperatureLoad(float max_temperature_load){
+        this.max_temperature_load = max_temperature_load;
+    }
+    public float getMaxTemperatureIdle(){
+        return max_temperature_idle;
+    }
+    public void setMaxTemperatureIdle(float max_temperature_idle){
+        this.max_temperature_idle = max_temperature_idle;
+    }
     public float getWeight() {
         return weight;
     }
@@ -133,13 +139,7 @@ public class Laptop implements Serializable {
     public void setCompareTables(Map<String, String> compare_tables) {
         this.compare_tables = compare_tables;
     }
-    public Map<String, Integer> getTemperatureInfo() {
-        return temperature_info;
-    }
-    public void setTemperatureInfo(Map<String, Integer> temperature_info) {
-        this.temperature_info = temperature_info;
-    }
-    public List<String> getDisplayInfo() {
+   public List<String> getDisplayInfo() {
         return display_info;
     }
     public void setDisplayInfo(List<String> display_info) {
@@ -159,9 +159,10 @@ public class Laptop implements Serializable {
             float width,
             float thickness,
             float weight,
+            float max_temperature_load,
+            float max_temperature_idle,
             Map<String, String> compare_tables,
             Map<String, String> compare_bars,
-            Map<String, Integer> temperature_info,
             List<String> display_info
     ) {
         this.link = link;
@@ -176,11 +177,11 @@ public class Laptop implements Serializable {
         this.width = width;
         this.thickness = thickness;
         this.weight = weight;
+        this.max_temperature_load = max_temperature_load;
+        this.max_temperature_idle = max_temperature_idle;
         this.compare_tables = compare_tables;
         this.compare_bars = compare_bars;
         this.display_info = display_info;
-        this.temperature_info = temperature_info;
-
     }
 
     public Laptop() {
@@ -305,6 +306,21 @@ public class Laptop implements Serializable {
                     .split(" ")[0]
         );
     }
+    public static float parseMaxTemperatureLoad(Map<String, Object[]> temperature_info){
+            return Arrays.stream(temperature_info.get("Max. Load"))
+                    .map(each -> ((String) each).split(" °C")[0].split(" ")[1])
+                    .map(Float::parseFloat)
+                    .max(Float::compareTo)
+                    .orElse(-1f);
+    }
+    public static float parseMaxTemperatureIdle(Map<String, Object[]> temperature_info){
+        return Arrays.stream(temperature_info.get("Idle"))
+                .map(each -> ((String)each).split(" °C")[0].split(" ")[1])
+                .map(Float::parseFloat)
+                .max(Float::compareTo)
+                .orElse(-1f);
+    }
+
     public static List<String> parseDisplayInfo(Document doc){
         return doc
                 .select("div.auto_analysis")
@@ -312,21 +328,22 @@ public class Laptop implements Serializable {
                 .textNodes()
                 .stream().map(TextNode::text).toList();
     }
-    public static Map<String, Integer> parseTemperatureInfo(Document doc){
+    public static Map<String, Object[]> createTemperatureInfo(Document doc){
         return doc
                     .select("div.nbc2rdisplay_smenu div[style=\";padding:5px;margin-bottom:5px;background-color:#ababab\"]")
                     .stream()
                     .collect(
                         Collectors.toMap(
                             e -> e.text(),
-                            e -> e.parent()
-                                  .parent()
-                                    .select("td.nbc2rdisplay_avgmax")
-                                    .textNodes()
-                                    .stream()
-                                    .map(TextNode::text)
-                                    .toArray()
-                                    .length
+                            e ->
+                                e
+                                .parent()
+                                .parent()
+                                .select("td.nbc2rdisplay_avgmax")
+                                .textNodes()
+                                .stream()
+                                .map(TextNode::text)
+                                .toArray()
                         )
                     );
     }
@@ -402,6 +419,7 @@ public class Laptop implements Serializable {
     public static Optional<Laptop> create(String link) {
         return createDoc(link).map(doc -> {
             Optional<Element> svg_node = selectDimensionSVG(doc);
+            Map<String, Object[]> temperature_info = createTemperatureInfo(doc);
             return new Laptop(
                     link,
                     Laptop.parseReviewer(doc),
@@ -423,9 +441,10 @@ public class Laptop implements Serializable {
                     svg_node
                         .map(Laptop::parseWeight)
                         .orElse(-1f),
+                    parseMaxTemperatureLoad(temperature_info),
+                    parseMaxTemperatureIdle(temperature_info),
                     selectCompareTables(doc),
                     selectCompareBars(doc),
-                    parseTemperatureInfo(doc),
                     parseDisplayInfo(doc)
             );
         });
