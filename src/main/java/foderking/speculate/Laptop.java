@@ -41,7 +41,7 @@ public class Laptop implements Serializable {
     @ElementCollection
     private List<String> display_info;
     @ElementCollection
-    private Map<String, String>  temperature_info;
+    private Map<String, Integer>  temperature_info;
     @ElementCollection
     private Map<String, String> compare_tables;
     @ElementCollection
@@ -133,10 +133,10 @@ public class Laptop implements Serializable {
     public void setCompareTables(Map<String, String> compare_tables) {
         this.compare_tables = compare_tables;
     }
-    public Map<String, String> getTemperatureInfo() {
+    public Map<String, Integer> getTemperatureInfo() {
         return temperature_info;
     }
-    public void setTemperatureInfo(Map<String, String> temperature_info) {
+    public void setTemperatureInfo(Map<String, Integer> temperature_info) {
         this.temperature_info = temperature_info;
     }
     public List<String> getDisplayInfo() {
@@ -158,7 +158,11 @@ public class Laptop implements Serializable {
             float length,
             float width,
             float thickness,
-            float weight
+            float weight,
+            Map<String, String> compare_tables,
+            Map<String, String> compare_bars,
+            Map<String, Integer> temperature_info,
+            List<String> display_info
     ) {
         this.link = link;
         this.reviewer = reviewer;
@@ -172,6 +176,11 @@ public class Laptop implements Serializable {
         this.width = width;
         this.thickness = thickness;
         this.weight = weight;
+        this.compare_tables = compare_tables;
+        this.compare_bars = compare_bars;
+        this.display_info = display_info;
+        this.temperature_info = temperature_info;
+
     }
 
     public Laptop() {
@@ -303,7 +312,7 @@ public class Laptop implements Serializable {
                 .textNodes()
                 .stream().map(TextNode::text).toList();
     }
-    public static Map<String, Object[]> parseTemperatureInfo(Document doc){
+    public static Map<String, Integer> parseTemperatureInfo(Document doc){
         return doc
                     .select("div.nbc2rdisplay_smenu div[style=\";padding:5px;margin-bottom:5px;background-color:#ababab\"]")
                     .stream()
@@ -317,6 +326,7 @@ public class Laptop implements Serializable {
                                     .stream()
                                     .map(TextNode::text)
                                     .toArray()
+                                    .length
                         )
                     );
     }
@@ -412,7 +422,11 @@ public class Laptop implements Serializable {
                         .orElse(-1f),
                     svg_node
                         .map(Laptop::parseWeight)
-                        .orElse(-1f)
+                        .orElse(-1f),
+                    selectCompareTables(doc),
+                    selectCompareBars(doc),
+                    parseTemperatureInfo(doc),
+                    parseDisplayInfo(doc)
             );
         });
     }
