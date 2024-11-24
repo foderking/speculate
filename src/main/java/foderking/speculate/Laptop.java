@@ -29,9 +29,7 @@ public class Laptop implements Serializable {
     private float width;
     private float thickness;
     private float weight;
-    @Column(name = "max_temperature_load")
     private float max_temperature_load;
-    @Column(name = "max_temperature_idle")
     private float max_temperature_idle;
 
     @ElementCollection

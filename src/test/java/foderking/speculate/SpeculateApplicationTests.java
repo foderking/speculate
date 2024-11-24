@@ -162,7 +162,7 @@ class SpeculateApplicationTests {
     @MethodSource("data")
     void parsingTemperatureInfo(String link){
         Document doc = Laptop.createDoc(link).get();
-        var temperature_info = Laptop.parseTemperatureInfo(doc);
+        var temperature_info = Laptop.createTemperatureInfo(doc);
         assertThat(temperature_info).isNotEmpty();
         temperature_info.values().forEach(e -> assertThat(e.length).isGreaterThanOrEqualTo(4));
     }
@@ -180,5 +180,19 @@ class SpeculateApplicationTests {
         Document doc = Laptop.createDoc(link).get();
         var dict = Laptop.selectCompareTables(doc);
         assertThat(dict).isNotEmpty();
+    }
+    @ParameterizedTest
+    @MethodSource("data")
+    void parsingMaxTempLoad(String link){
+        Document doc = Laptop.createDoc(link).get();
+        Map<String, Object[]> tmp = Laptop.createTemperatureInfo(doc);
+        assertThat(Laptop.parseMaxTemperatureLoad(tmp)).isGreaterThan(0f);
+    }
+    @ParameterizedTest
+    @MethodSource("data")
+    void parsingMaxTempIdle(String link){
+        Document doc = Laptop.createDoc(link).get();
+        Map<String, Object[]> tmp = Laptop.createTemperatureInfo(doc);
+        assertThat(Laptop.parseMaxTemperatureIdle(tmp)).isGreaterThan(0f);
     }
 }
