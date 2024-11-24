@@ -38,6 +38,16 @@ public class Laptop implements Serializable {
     private float thickness;
     private float weight;
 
+    @ElementCollection
+    private List<String> display_info;
+    @ElementCollection
+    private Map<String, String>  temperature_info;
+    @ElementCollection
+    private Map<String, String> compare_tables;
+    @ElementCollection
+    private Map<String, String> compare_bars;
+
+
     public float getWeight() {
         return weight;
     }
@@ -109,6 +119,31 @@ public class Laptop implements Serializable {
     }
     public void setRating(Integer rating) {
         this.rating = rating;
+    }
+
+    public Map<String, String> getCompareBars() {
+        return compare_bars;
+    }
+    public void setCompareBars(Map<String, String> compare_bars) {
+        this.compare_bars = compare_bars;
+    }
+    public Map<String, String> getCompareTables() {
+        return compare_tables;
+    }
+    public void setCompareTables(Map<String, String> compare_tables) {
+        this.compare_tables = compare_tables;
+    }
+    public Map<String, String> getTemperatureInfo() {
+        return temperature_info;
+    }
+    public void setTemperatureInfo(Map<String, String> temperature_info) {
+        this.temperature_info = temperature_info;
+    }
+    public List<String> getDisplayInfo() {
+        return display_info;
+    }
+    public void setDisplayInfo(List<String> display_info) {
+        this.display_info = display_info;
     }
 
     public Laptop(
