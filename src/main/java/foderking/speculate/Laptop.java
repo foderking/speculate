@@ -326,6 +326,11 @@ public class Laptop implements Serializable {
                 .textNodes()
                 .stream().map(TextNode::text).toList();
     }
+    public static List<String> createLinksFromSearch(Document doc){
+        return doc
+                .select("table#search td > a")
+                .eachAttr("href");
+    }
     public static Map<String, Object[]> createTemperatureInfo(Document doc){
         return doc
                     .select("div.nbc2rdisplay_smenu div[style=\";padding:5px;margin-bottom:5px;background-color:#ababab\"]")
