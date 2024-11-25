@@ -23,6 +23,7 @@ public class Laptop implements Serializable {
     private String model;
     private int review_version;
     @ElementCollection
+    @Column(columnDefinition="TEXT", length = 1000)
     private Map<String, String> info;
     private int rating;
     private float length;
@@ -246,17 +247,19 @@ public class Laptop implements Serializable {
                 .select(".specs_whole > .specs_element")
                 .stream()
                 .filter(
-                        e -> !e.hasAttr("style")
+                    e -> !e.hasAttr("style")
                 )
                 .map(
-                        e -> e
-                                .children()
-                                .stream()
-                                .map(Element::text)
-                                .toArray()
+                    e -> e
+                        .children()
+                        .stream()
+                        .map(Element::text)
+                        .toArray(String[]::new)
                 )
                 .collect(
-                        Collectors.toMap(i -> (String) i[0], i -> (String) (i.length>1 ? i[1] : ""))
+                    Collectors.toMap(
+                        i -> i[0],
+                        i -> (i.length >1 ? i[1] : ""))
                 );
     }
     public static int parseRating(Document doc) {
