@@ -5,7 +5,7 @@
     <title>Speculate</title>
     <style>
         th {
-            background-color: gray;
+            background-color: #8080807a;
         }
         table, th, td{
             border: 1px solid black;
@@ -16,16 +16,25 @@
 <body>
     <h1>Speculate</h1>
     <h4>Search results:</h4>
-    version <p th:text="${version}" />
     <table>
         <tbody>
             <tr>
                 <th>Laptop Model</th>
                 <th>Laptop Rating</th>
+                <th>Laptop Thickness</th>
+                <th>Laptop Weight</th>
+                <th>Laptop Version</th>
+                <th>Max Temp Load</th>
+                <th>Max Temp Idle</th>
             </tr>
             <tr th:each="laptop: ${laptops}">
                 <td th:text="${laptop.model}" />
                 <td th:text="${laptop.rating}" />
+                <td th:text="${laptop.thickness}" />
+                <td th:text="${laptop.weight}" />
+                <td th:text="${laptop.reviewVersion}" />
+                <td th:text="${laptop.maxTemperatureLoad}" />
+                <td th:text="${laptop.maxTemperatureIdle}" />
             </tr>
         </tbody>
     </table>

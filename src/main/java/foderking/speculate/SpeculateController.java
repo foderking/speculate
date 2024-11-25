@@ -24,7 +24,6 @@ public class SpeculateController {
     @PostMapping(value="/filter")
     public String postTemplate(@ModelAttribute("filter") Filter f, Model model){
         Iterable<Laptop> tmp = repo.findAllByRatingGreaterThanEqual(f.getRating());
-        model.addAttribute("version",f.getVersion());
         model.addAttribute("laptops",tmp);
         return "template";
     }
