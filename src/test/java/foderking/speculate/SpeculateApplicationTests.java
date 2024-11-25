@@ -187,14 +187,14 @@ class SpeculateApplicationTests {
     @MethodSource("data")
     void parsingMaxTempLoad(String link){
         Document doc = Laptop.createDoc(link).get();
-        Map<String, Object[]> tmp = Laptop.createTemperatureInfo(doc);
+        Map<String, String[]> tmp = Laptop.createTemperatureInfo(doc);
         assertThat(Laptop.parseMaxTemperatureLoad(tmp)).isGreaterThan(0f);
     }
     @ParameterizedTest
     @MethodSource("data")
     void parsingMaxTempIdle(String link){
         Document doc = Laptop.createDoc(link).get();
-        Map<String, Object[]> tmp = Laptop.createTemperatureInfo(doc);
+        Map<String, String[]> tmp = Laptop.createTemperatureInfo(doc);
         assertThat(Laptop.parseMaxTemperatureIdle(tmp)).isGreaterThan(0f);
     }
 }

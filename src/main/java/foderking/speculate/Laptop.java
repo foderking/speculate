@@ -304,16 +304,16 @@ public class Laptop implements Serializable {
                     .split(" ")[0]
         );
     }
-    public static float parseMaxTemperatureLoad(Map<String, Object[]> temperature_info){
+    public static float parseMaxTemperatureLoad(Map<String, String[]> temperature_info){
             return Arrays.stream(temperature_info.get("Max. Load"))
-                    .map(each -> ((String) each).split(" °C")[0].split(" ")[1])
+                    .map(each -> each.split(" °C")[0].split(" ")[1])
                     .map(Float::parseFloat)
                     .max(Float::compareTo)
                     .orElse(-1f);
     }
-    public static float parseMaxTemperatureIdle(Map<String, Object[]> temperature_info){
+    public static float parseMaxTemperatureIdle(Map<String, String[]> temperature_info){
         return Arrays.stream(temperature_info.get("Idle"))
-                .map(each -> ((String)each).split(" °C")[0].split(" ")[1])
+                .map(each -> each.split(" °C")[0].split(" ")[1])
                 .map(Float::parseFloat)
                 .max(Float::compareTo)
                 .orElse(-1f);
@@ -331,7 +331,7 @@ public class Laptop implements Serializable {
                 .select("table#search td > a")
                 .eachAttr("href");
     }
-    public static Map<String, Object[]> createTemperatureInfo(Document doc){
+    public static Map<String, String[]> createTemperatureInfo(Document doc){
         return doc
                     .select("div.nbc2rdisplay_smenu div[style=\";padding:5px;margin-bottom:5px;background-color:#ababab\"]")
                     .stream()
@@ -346,7 +346,7 @@ public class Laptop implements Serializable {
                                 .textNodes()
                                 .stream()
                                 .map(TextNode::text)
-                                .toArray(),
+                                .toArray(String[]::new),
                                 (key1, key2) -> key1 // fix duplicate key bug
                         )
                     );
@@ -423,7 +423,7 @@ public class Laptop implements Serializable {
     public static Optional<Laptop> create(String link) {
         return createDoc(link).map(doc -> {
             Optional<Element> svg_node = selectDimensionSVG(doc);
-            Map<String, Object[]> temperature_info = createTemperatureInfo(doc);
+            Map<String, String[]> temperature_info = createTemperatureInfo(doc);
             return new Laptop(
                     link,
                     Laptop.parseReviewer(doc),
