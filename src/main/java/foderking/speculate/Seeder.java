@@ -14,6 +14,10 @@ import java.net.http.HttpResponse;
 import java.time.Year;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
 public class Seeder implements CommandLineRunner {
@@ -22,6 +26,9 @@ public class Seeder implements CommandLineRunner {
     @Autowired
     HttpClient client;
     Logger logger = LoggerFactory.getLogger(Seeder.class);
+
+    AtomicInteger success = new AtomicInteger(0);
+    AtomicInteger error   = new AtomicInteger(0);
 
     @Override
     public void run(String... args){
@@ -91,17 +98,29 @@ public class Seeder implements CommandLineRunner {
 
         for (int year=2013; year <= current_year; year++) {
             logger.info("Year: " + year);
+            success.set(0);
+            error.set(0);
 
             Optional<List<String>> links = parseYear(year)
                         .map(Jsoup::parse)
                         .map(Laptop::createLinksFromSearch);
             if (links.isPresent()) {
                 logger.info(links.get().size() + " links found");
-                links
-                    .get()
-                    .stream()
-                    .map(Laptop::create)
-                    .forEach(this::saveParsedLaptoptoDB);
+                try(ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
+                    for (String link : links.get()) {
+                        executor.submit(() -> {
+                            Optional<Laptop> laptop = Laptop.create(link);
+                            saveParsedLaptoptoDB(laptop);
+                        });
+                    }
+
+                }
+                logger.info("success " + success.get() + ", error " + error.get());
+//                links
+//                    .get()
+//                    .stream()
+//                    .map(Laptop::create)
+//                    .forEach(this::saveParsedLaptoptoDB);
             }
             else{
                 logger.info("failed to parse year: " + year);
@@ -112,10 +131,12 @@ public class Seeder implements CommandLineRunner {
     public void saveParsedLaptoptoDB(Optional<Laptop> laptop){
         if (laptop.isPresent()) {
             repo.save(laptop.get());
-            logger.info("laptop saved to db");
+//            logger.info("laptop saved to db");
+            success.incrementAndGet();
         }
         else {
-            logger.info("laptop not parsed");
+//            logger.info("laptop not parsed");
+            error.incrementAndGet();
         }
     }
 
