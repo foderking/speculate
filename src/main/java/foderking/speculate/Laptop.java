@@ -341,7 +341,8 @@ public class Laptop implements Serializable {
                                 .textNodes()
                                 .stream()
                                 .map(TextNode::text)
-                                .toArray()
+                                .toArray(),
+                                (key1, key2) -> key1 // fix duplicate key bug
                         )
                     );
     }
