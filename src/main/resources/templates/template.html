@@ -20,12 +20,12 @@
         <tbody>
             <tr>
                 <th>Laptop Model</th>
-                <th>Laptop Rating</th>
-                <th>Laptop Thickness</th>
-                <th>Laptop Weight</th>
+                <th>Laptop Rating (%)</th>
+                <th>Laptop Thickness (mm)</th>
+                <th>Laptop Weight (kg)</th>
                 <th>Laptop Version</th>
-                <th>Max Temp Load</th>
-                <th>Max Temp Idle</th>
+                <th>Max Temp Load (°C)</th>
+                <th>Max Temp Idle (°C)</th>
             </tr>
             <tr th:each="laptop: ${laptops}">
                 <td th:text="${laptop.model}" />
