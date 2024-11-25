@@ -360,7 +360,6 @@ public class Laptop implements Serializable {
                     .maxBodySize(0)
                     .get());
         } catch (IOException e) {
-            System.out.println(e.getMessage());
             return Optional.empty();
         }
     }

@@ -17,6 +17,7 @@ import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
@@ -93,10 +94,11 @@ public class Seeder implements CommandLineRunner {
     }
 
     public void populateDB(){
+        Semaphore semaphore = new Semaphore(5); // limits concurrent requests to prevent timeout
         logger.info("scraping all laptop reviews");
-        int current_year = Year.now().getValue();
+        int current_year = 2013;//Year.now().getValue();
 
-        for (int year=2013; year <= current_year; year++) {
+        for (int year = 2013; year <= current_year; year++) {
             logger.info("Year: " + year);
             success.set(0);
             error.set(0);
@@ -109,18 +111,22 @@ public class Seeder implements CommandLineRunner {
                 try(ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
                     for (String link : links.get()) {
                         executor.submit(() -> {
-                            Optional<Laptop> laptop = Laptop.create(link);
-                            saveParsedLaptoptoDB(laptop);
+                            try {
+                                semaphore.acquire();
+                                Optional<Laptop> laptop = Laptop.create(link);
+                                saveParsedLaptoptoDB(laptop);
+                            }
+                            catch (InterruptedException e){
+                                logger.error("Error " + e.getMessage());
+                            }
+                            finally {
+                                semaphore.release();
+                            }
                         });
                     }
 
                 }
                 logger.info("success " + success.get() + ", error " + error.get());
-//                links
-//                    .get()
-//                    .stream()
-//                    .map(Laptop::create)
-//                    .forEach(this::saveParsedLaptoptoDB);
             }
             else{
                 logger.info("failed to parse year: " + year);
@@ -131,11 +137,9 @@ public class Seeder implements CommandLineRunner {
     public void saveParsedLaptoptoDB(Optional<Laptop> laptop){
         if (laptop.isPresent()) {
             repo.save(laptop.get());
-//            logger.info("laptop saved to db");
             success.incrementAndGet();
         }
         else {
-//            logger.info("laptop not parsed");
             error.incrementAndGet();
         }
     }
@@ -147,7 +151,9 @@ public class Seeder implements CommandLineRunner {
                 HttpRequest.newBuilder()
                     .uri(URI.create("https://www.notebookcheck.net/Laptop-Search.8223.0.html"))
                     .headers("Content-Type","application/x-www-form-urlencoded")
-                    .POST(HttpRequest.BodyPublishers.ofString("manufacturer=&model=&lang=2&gpu=&gpu_manu=&gpu_architecture=&gpu_class=&cpu=&cpu_manu=&exclude_cpu_manu=&cpu_generation=&cpu_cores=&inch=&inch_from=&inch_to=&screen_ratio=&screen_resolution_x=&screen_resolution_y=&screen_glossy=&screen_panel_type=&screen_panel=&screen_refresh_rate=&class=&rating=&reviewcount=&dr_workmanship=&dr_display=&dr_emissions=&dr_ergonomy=&dr_performance=&dr_mobility=&dr_temperature=&dr_audio=&dr_camera=&ratingversion=&age=&min_age=&year_from=2022&year_till=2022&weight=&size_width=&size_length=&size_depth=&price=&min_price=&min_list_price=&list_price=&ram=&battery_capacity=&battery_capacity_mah=&hdd_size=&hdd_type=&odd_type=&lan_type=&wlan_type=&brightness_center=&de2000_colorchecker=&percent_of_srgb=&percent_of_adobergb=&pwm=&loudness_min=&loudness_load=&battery_wlan=&os_type=&tag_type=16&nbcReviews=1&archive=1&orderby=0&scatterplot_x=&scatterplot_y=&scatterplot_r="))
+                    .POST(HttpRequest.BodyPublishers.ofString(
+                            String.format("manufacturer=&model=&lang=2&gpu=&gpu_manu=&gpu_architecture=&gpu_class=&cpu=&cpu_manu=&exclude_cpu_manu=&cpu_generation=&cpu_cores=&inch=&inch_from=&inch_to=&screen_ratio=&screen_resolution_x=&screen_resolution_y=&screen_glossy=&screen_panel_type=&screen_panel=&screen_refresh_rate=&class=&rating=&reviewcount=&dr_workmanship=&dr_display=&dr_emissions=&dr_ergonomy=&dr_performance=&dr_mobility=&dr_temperature=&dr_audio=&dr_camera=&ratingversion=&age=&min_age=&year_from=%s&year_till=%s&weight=&size_width=&size_length=&size_depth=&price=&min_price=&min_list_price=&list_price=&ram=&battery_capacity=&battery_capacity_mah=&hdd_size=&hdd_type=&odd_type=&lan_type=&wlan_type=&brightness_center=&de2000_colorchecker=&percent_of_srgb=&percent_of_adobergb=&pwm=&loudness_min=&loudness_load=&battery_wlan=&os_type=&tag_type=16&nbcReviews=1&archive=1&orderby=0&scatterplot_x=&scatterplot_y=&scatterplot_r=", year, year)
+                    ))
                     .build(),
                 HttpResponse.BodyHandlers.ofString()
             );
