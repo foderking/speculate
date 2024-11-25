@@ -2,17 +2,32 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Speculate</title>
+    <style>
+        th {
+            background-color: gray;
+        }
+        table, th, td{
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+    </style>
 </head>
 <body>
-    <p th:text="${version}" />
+    <h1>Speculate</h1>
+    <h4>Search results:</h4>
+    version <p th:text="${version}" />
     <table>
-    <tbody>
-    <tr th:each="laptop: ${laptops}">
-        <td th:text="${laptop.model}" />
-        <td th:text="${laptop.rating}" />
-    </tr>
-    </tbody>
+        <tbody>
+            <tr>
+                <th>Laptop Model</th>
+                <th>Laptop Rating</th>
+            </tr>
+            <tr th:each="laptop: ${laptops}">
+                <td th:text="${laptop.model}" />
+                <td th:text="${laptop.rating}" />
+            </tr>
+        </tbody>
     </table>
 </body>
 </html>

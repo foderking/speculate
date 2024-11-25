@@ -137,7 +137,7 @@ public class Laptop implements Serializable {
     public void setCompareTables(Map<String, String> compare_tables) {
         this.compare_tables = compare_tables;
     }
-   public List<String> getDisplayInfo() {
+    public List<String> getDisplayInfo() {
         return display_info;
     }
     public void setDisplayInfo(List<String> display_info) {
