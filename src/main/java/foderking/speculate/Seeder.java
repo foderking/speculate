@@ -1,7 +1,6 @@
 package foderking.speculate;
 
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +24,8 @@ public class Seeder implements CommandLineRunner {
     LaptopRepository repo;
     @Autowired
     HttpClient client;
-    Logger logger = LoggerFactory.getLogger(Seeder.class);
 
+    Logger logger = LoggerFactory.getLogger(Seeder.class);
     AtomicInteger success = new AtomicInteger(0);
     AtomicInteger error   = new AtomicInteger(0);
 
@@ -59,35 +58,24 @@ public class Seeder implements CommandLineRunner {
         }
     }
 
-//    public Optional<String> parseMinimal(){
-//        try {
-//            var tmp = client.send(
-//                HttpRequest.newBuilder()
-//                    .uri(URI.create("https://www.notebookcheck.net/Laptop-Search.8223.0.html"))
-//                    .headers("Content-Type","application/x-www-form-urlencoded")
-//                    .POST(HttpRequest.BodyPublishers.ofString("manufacturer=&model=&lang=2&gpu=&gpu_manu=&gpu_architecture=&gpu_class=&cpu=&cpu_manu=&exclude_cpu_manu=&cpu_generation=&cpu_cores=&inch=&inch_from=&inch_to=&screen_ratio=&screen_resolution_x=&screen_resolution_y=&screen_glossy=&screen_panel_type=&screen_panel=&screen_refresh_rate=&class=&rating=92&reviewcount=&dr_workmanship=&dr_display=&dr_emissions=&dr_ergonomy=&dr_performance=&dr_mobility=&dr_temperature=&dr_audio=&dr_camera=&ratingversion=&age=&min_age=&year_from=&year_till=&weight=&size_width=&size_length=&size_depth=&price=&min_price=&min_list_price=&list_price=&ram=&battery_capacity=&battery_capacity_mah=&hdd_size=&hdd_type=&odd_type=&lan_type=&wlan_type=&brightness_center=&de2000_colorchecker=&percent_of_srgb=&percent_of_adobergb=&pwm=&loudness_min=&loudness_load=&battery_wlan=&os_type=&tag_type=16&nbcReviews=1&orderby=0&scatterplot_x=&scatterplot_y=&scatterplot_r="))
-//                    .build(),
-//                HttpResponse.BodyHandlers.ofString()
-//            );
-//            return Optional.of(tmp.body());
-//        } catch(Exception e){
-//            return Optional.empty();
-//        }
-//    }
-
     public void populateDB(){
-        Semaphore semaphore = new Semaphore(5); // limits concurrent requests to prevent timeout
-        logger.info("scraping all laptop reviews");
-        int current_year = Year.now().getValue();
+        int max_concurrent = 5;
+        int start_year = 2024; // earliest review
+//        int start_year = 2013; // earliest review
+//        int current_year = Year.now().getValue();
+        int current_year = start_year;
+        Semaphore semaphore = new Semaphore(max_concurrent); // prevent read timeout
 
-        for (int year = 2013; year <= current_year; year++) {
+        logger.info("scraping all laptop reviews");
+
+        for (int year = start_year; year <= current_year; year++) {
             logger.info("Year: " + year);
             success.set(0);
             error.set(0);
-
-            Optional<List<String>> links = parseYear(year)
-                        .map(Jsoup::parse)
-                        .map(Laptop::createLinksFromSearch);
+            Optional<List<String>> links =
+                parseYear(year)
+                .map(Jsoup::parse)
+                .map(Laptop::createLinksFromSearch);
             if (links.isPresent()) {
                 logger.info(links.get().size() + " links found");
                 try(ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
