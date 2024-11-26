@@ -172,7 +172,7 @@ class SpeculateApplicationTests {
     @MethodSource("data")
     void parsingCompareBars(String link){
         Document doc = Laptop.createDoc(link).get();
-        var dict = Laptop.selectCompareBars(doc);
+        var dict = Laptop.createCompareBars(doc);
         assertThat(dict).isNotEmpty();
     }
 
@@ -180,7 +180,7 @@ class SpeculateApplicationTests {
     @MethodSource("data")
     void parsingCompareTables(String link){
         Document doc = Laptop.createDoc(link).get();
-        var dict = Laptop.selectCompareTables(doc);
+        var dict = Laptop.createCompareTables(doc);
         assertThat(dict).isNotEmpty();
     }
     @ParameterizedTest
@@ -196,5 +196,16 @@ class SpeculateApplicationTests {
         Document doc = Laptop.createDoc(link).get();
         Map<String, String[]> tmp = Laptop.createTemperatureInfo(doc);
         assertThat(Laptop.parseMaxTemperatureIdle(tmp)).isGreaterThan(0f);
+    }
+    @ParameterizedTest
+    @MethodSource("data")
+    void parsingBattery(String link){
+        Document doc = Laptop.createDoc(link).get();
+        Map<String, String> tmp = Laptop.createCompareTables(doc);
+        Integer version = Laptop.parseReviewVersion(doc);
+        int battery = Laptop.parseBattery(tmp);
+        if (version > 5){
+            assertThat(battery).isGreaterThan(0);
+        }
     }
 }

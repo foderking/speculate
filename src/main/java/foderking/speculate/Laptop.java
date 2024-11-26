@@ -32,6 +32,7 @@ public class Laptop implements Serializable {
     private float weight;
     private float max_temperature_load;
     private float max_temperature_idle;
+    private int battery;
 
     @ElementCollection
     private List<String> display_info;
@@ -41,6 +42,12 @@ public class Laptop implements Serializable {
     private Map<String, String> compare_bars;
 
 
+    public int getBattery() {
+        return battery;
+    }
+    public void setBattery(int battery) {
+        this.battery = battery;
+    }
     public float getMaxTemperatureLoad(){
         return max_temperature_load;
     }
@@ -160,6 +167,7 @@ public class Laptop implements Serializable {
             float weight,
             float max_temperature_load,
             float max_temperature_idle,
+            int battery,
             Map<String, String> compare_tables,
             Map<String, String> compare_bars,
             List<String> display_info
@@ -178,6 +186,7 @@ public class Laptop implements Serializable {
         this.weight = weight;
         this.max_temperature_load = max_temperature_load;
         this.max_temperature_idle = max_temperature_idle;
+        this.battery = battery;
         this.compare_tables = compare_tables;
         this.compare_bars = compare_bars;
         this.display_info = display_info;
@@ -321,6 +330,11 @@ public class Laptop implements Serializable {
                 .max(Float::compareTo)
                 .orElse(-1f);
     }
+    public static int parseBattery(Map<String, String> compare_tables){
+        return Integer.parseInt(
+                compare_tables.getOrDefault("Battery Runtime:WiFi v1.3","-1")
+        );
+    }
 
     public static List<String> parseDisplayInfo(Document doc){
         return doc
@@ -378,7 +392,7 @@ public class Laptop implements Serializable {
                     return doc.selectFirst(svg_id);
                 });
     }
-    public static Map<String, String> selectCompareTables(Document doc){
+    public static Map<String, String> createCompareTables(Document doc){
         HashMap<String, String> root_hashmap = new HashMap();
         Elements compared_tables = doc.select("table.comparetable");
         for (Element compared_table: compared_tables){
@@ -398,7 +412,7 @@ public class Laptop implements Serializable {
         }
         return root_hashmap;
     }
-    public static Map<String, String> selectCompareBars(Document doc){
+    public static Map<String, String> createCompareBars(Document doc){
         HashMap<String, String> root_hashmap = new HashMap();
         Elements compared_bars = doc.select("table.r_compare_bars");
         for (Element compared_bar: compared_bars){
@@ -451,8 +465,9 @@ public class Laptop implements Serializable {
                         .orElse(-1f),
                     parseMaxTemperatureLoad(temperature_info),
                     parseMaxTemperatureIdle(temperature_info),
-                    selectCompareTables(doc),
-                    selectCompareBars(doc),
+                    1,
+                    createCompareTables(doc),
+                    createCompareBars(doc),
                     parseDisplayInfo(doc)
             );
         });
