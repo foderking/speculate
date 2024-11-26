@@ -40,6 +40,8 @@ public class Laptop implements Serializable {
     private Map<String, String> compare_tables;
     @ElementCollection
     private Map<String, String> compare_bars;
+    @ElementCollection
+    private Map<String, String> bar_charts;
 
 
     public int getBattery() {
@@ -151,6 +153,12 @@ public class Laptop implements Serializable {
     public void setDisplayInfo(List<String> display_info) {
         this.display_info = display_info;
     }
+    public Map<String, String> getBarCharts() {
+        return bar_charts;
+    }
+    public void setBarCharts(Map<String, String> bar_charts) {
+        this.bar_charts = bar_charts;
+    }
 
     public Laptop(
             String link,
@@ -170,6 +178,7 @@ public class Laptop implements Serializable {
             int battery,
             Map<String, String> compare_tables,
             Map<String, String> compare_bars,
+            Map<String, String> bar_charts,
             List<String> display_info
     ) {
         this.link = link;
@@ -189,6 +198,7 @@ public class Laptop implements Serializable {
         this.battery = battery;
         this.compare_tables = compare_tables;
         this.compare_bars = compare_bars;
+        this.bar_charts = bar_charts;
         this.display_info = display_info;
     }
 
@@ -349,9 +359,7 @@ public class Laptop implements Serializable {
         );
         List<String> chart_keys = List.of(
             "WiFi Websurfing",
-            "WiFi Surfing",
-            "WiFi Websurfing (IE 11)",
-            "WiFi Websurfing (Edge)"
+            "WiFi Surfing"
         );
         for (String key: table_keys){
             if (compare_tables.containsKey(key)){
@@ -369,6 +377,14 @@ public class Laptop implements Serializable {
         }
         for (String key: chart_keys){
             if (bar_charts.containsKey(key)){
+                String[] tmp = bar_charts.get(key).split("h");
+                int hours  = Integer.parseInt(tmp[0]);
+                int minutes = Integer.parseInt(tmp[1].substring(1,3));
+                return hours * 60 + minutes;
+            }
+        }
+        for (String key: bar_charts.keySet()) {
+            if (key.startsWith("WiFi Websurfing")) {
                 String[] tmp = bar_charts.get(key).split("h");
                 int hours  = Integer.parseInt(tmp[0]);
                 int minutes = Integer.parseInt(tmp[1].substring(1,3));
@@ -524,6 +540,7 @@ public class Laptop implements Serializable {
                     parseBattery(compare_tables, compare_bars, bar_charts),
                     compare_tables,
                     compare_bars,
+                    bar_charts,
                     parseDisplayInfo(doc)
             );
         });
