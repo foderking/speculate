@@ -3,49 +3,45 @@ package foderking.speculate;
 import java.io.Serializable;
 
 public class Filter implements Serializable {
-    public String getVersion() {
-        return version;
+
+    private Float weight;
+    private Float thickness;
+
+    public void setMax_temperature_idle(Integer max_temperature_idle) {
+        this.max_temperature_idle = max_temperature_idle;
     }
 
-    public void setVersion(String version) {
-        this.version = version;
+    public void setMax_temperature_load(Integer max_temperature_load) {
+        this.max_temperature_load = max_temperature_load;
     }
 
-    private String version;
-
-    public Integer getRating() {
-        return rating;
+    public void setThickness(Float thickness) {
+        this.thickness = thickness;
     }
 
-    public void setRating(Integer rating) {
-        this.rating = rating;
+    public void setWeight(Float weight) {
+        this.weight = weight;
     }
 
-    private Integer rating;
-    private float thickness;
+    private Integer max_temperature_load;
+    private Integer max_temperature_idle;
 
-    public float getWeight() {
+    public Float getWeight() {
         return weight;
     }
 
-    private float weight;
-
-    public float getMax_temperature_idle() {
+    public Integer getMax_temperature_idle() {
         return max_temperature_idle;
     }
 
-    public float getMax_temperature_load() {
+    public Integer getMax_temperature_load() {
         return max_temperature_load;
     }
 
-    public float getThickness() {
+    public Float getThickness() {
         return thickness;
     }
-
-    private float max_temperature_load;
-    private float max_temperature_idle;
-
-//    public Filter(String version_number) {
-//        this.version_number = version_number;
-//    }
+    public String toString() {
+        return String.format("w=%f,t_idle=%d,t_load=%d", weight, max_temperature_idle, max_temperature_load);
+    }
 }
