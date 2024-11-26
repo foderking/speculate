@@ -330,7 +330,7 @@ public class Laptop implements Serializable {
                 .max(Float::compareTo)
                 .orElse(-1f);
     }
-    public static int parseBattery(Map<String, String> compare_tables, Map<String, String> compare_bars){
+    public static int parseBattery(Map<String, String> compare_tables, Map<String, String> compare_bars, Map<String,String> bar_charts){
         List<String> table_keys = List.of(
             "Battery Runtime:WiFi v1.3",
             "WiFi Websurfing"
@@ -341,6 +341,10 @@ public class Laptop implements Serializable {
             "Battery Runtime - WiFi (sort by value)",
             "Battery Runtime - WiFi Websurfing",
             "Battery Runtime - WiFi Websurfing (sort by value)"
+        );
+        List<String> chart_keys = List.of(
+            "WiFi Websurfing",
+            "WiFi Surfing"
         );
         for (String key: table_keys){
             if (compare_tables.containsKey(key)){
@@ -354,6 +358,14 @@ public class Laptop implements Serializable {
                 return Integer.parseInt(
                     compare_bars.get(key)
                 );
+            }
+        }
+        for (String key: chart_keys){
+            if (bar_charts.containsKey(key)){
+                String[] tmp = bar_charts.get(key).split("h");
+                int hours  = Integer.parseInt(tmp[0]);
+                int minutes = Integer.parseInt(tmp[1].substring(1,3));
+                return hours * 60 + minutes;
             }
         }
         return -1;
@@ -458,6 +470,17 @@ public class Laptop implements Serializable {
         return root_hashmap;
 
     }
+    public static Map<String, String> createBarCharts(Document doc){
+        return doc
+                .select("table.barcharts tr td.caption")
+                .stream()
+                .collect(
+                    Collectors.toMap(
+                        td -> td.text(),
+                        td -> td.parent().parent().selectFirst("td.runtime").text()
+                    )
+                );
+    }
     public static Elements selectStatsNode(Document doc){
         return doc.select("div.ttcl_0 div.nbc_element");
     }
@@ -467,6 +490,7 @@ public class Laptop implements Serializable {
             Map<String, String[]> temperature_info = createTemperatureInfo(doc);
             Map<String, String> compare_tables = createCompareTables(doc);
             Map<String, String> compare_bars = createCompareBars(doc);
+            Map<String, String> bar_charts = createBarCharts(doc);
             return new Laptop(
                     link,
                     Laptop.parseReviewer(doc),
@@ -490,7 +514,7 @@ public class Laptop implements Serializable {
                         .orElse(-1f),
                     parseMaxTemperatureLoad(temperature_info),
                     parseMaxTemperatureIdle(temperature_info),
-                    parseBattery(compare_tables, compare_bars),
+                    parseBattery(compare_tables, compare_bars, bar_charts),
                     compare_tables,
                     compare_bars,
                     parseDisplayInfo(doc)

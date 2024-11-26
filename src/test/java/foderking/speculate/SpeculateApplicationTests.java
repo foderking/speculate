@@ -205,8 +205,9 @@ class SpeculateApplicationTests {
         Document doc = Laptop.createDoc(link).get();
         Map<String, String> tmp1 = Laptop.createCompareTables(doc);
         Map<String, String> tmp2 = Laptop.createCompareBars(doc);
+        Map<String, String> tmp3 = Laptop.createBarCharts(doc);
         Integer version = Laptop.parseReviewVersion(doc);
-        int battery = Laptop.parseBattery(tmp1,tmp2);
+        int battery = Laptop.parseBattery(tmp1,tmp2,tmp3);
         assertThat(battery).isGreaterThan(0);
     }
 }
