@@ -24,16 +24,21 @@ public class SpeculateController {
     public String postTemplate(@ModelAttribute("filter") Filter f, Model model){
 //        Iterable<Laptop> tmp  repo.findAllByRatingGreaterThanEqual(f.getRating());
         Iterable<Laptop> tmp = repo.filterAllColumns(
-                checkFloat(f.getWeight()), checkFloat(f.getThickness()), checkInt(f.getMax_temperature_load()),checkInt(f.getMax_temperature_idle())
+                maxFloat(f.getWeight()), maxFloat(f.getThickness()),
+                maxInt(f.getMax_temperature_load()), maxInt(f.getMax_temperature_idle()),
+                minInt(f.getBattery())
         );
         model.addAttribute("laptops",tmp);
         return "template";
     }
 
-    public Float checkFloat(Float f){
+    public Float maxFloat(Float f){
         return f==null ? Float.MAX_VALUE : f;
     }
-    public Integer checkInt(Integer i){
+    public Integer maxInt(Integer i){
         return i==null ? Integer.MAX_VALUE : i;
+    }
+    public Integer minInt(Integer i){
+        return i==null ? Integer.MIN_VALUE : i;
     }
 }

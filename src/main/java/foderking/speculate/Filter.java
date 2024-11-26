@@ -7,6 +7,16 @@ public class Filter implements Serializable {
     private Float weight;
     private Float thickness;
 
+    public Integer getBattery() {
+        return battery;
+    }
+
+    public void setBattery(Integer battery) {
+        this.battery = battery;
+    }
+
+    private Integer battery;
+
     public void setMax_temperature_idle(Integer max_temperature_idle) {
         this.max_temperature_idle = max_temperature_idle;
     }

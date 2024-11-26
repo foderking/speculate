@@ -330,10 +330,33 @@ public class Laptop implements Serializable {
                 .max(Float::compareTo)
                 .orElse(-1f);
     }
-    public static int parseBattery(Map<String, String> compare_tables){
-        return Integer.parseInt(
-                compare_tables.getOrDefault("Battery Runtime:WiFi v1.3","-1")
+    public static int parseBattery(Map<String, String> compare_tables, Map<String, String> compare_bars){
+        List<String> table_keys = List.of(
+            "Battery Runtime:WiFi v1.3",
+            "WiFi Websurfing"
         );
+        List<String> bar_keys = List.of(
+            "WiFi Websurfing",
+            "Battery Runtime - WiFi",
+            "Battery Runtime - WiFi (sort by value)",
+            "Battery Runtime - WiFi Websurfing",
+            "Battery Runtime - WiFi Websurfing (sort by value)"
+        );
+        for (String key: table_keys){
+            if (compare_tables.containsKey(key)){
+                return Integer.parseInt(
+                    compare_tables.get(key)
+                );
+            }
+        }
+        for (String key: bar_keys){
+            if (compare_bars.containsKey(key)){
+                return Integer.parseInt(
+                    compare_bars.get(key)
+                );
+            }
+        }
+        return -1;
     }
 
     public static List<String> parseDisplayInfo(Document doc){
@@ -442,6 +465,8 @@ public class Laptop implements Serializable {
         return createDoc(link).map(doc -> {
             Optional<Element> svg_node = selectDimensionSVG(doc);
             Map<String, String[]> temperature_info = createTemperatureInfo(doc);
+            Map<String, String> compare_tables = createCompareTables(doc);
+            Map<String, String> compare_bars = createCompareBars(doc);
             return new Laptop(
                     link,
                     Laptop.parseReviewer(doc),
@@ -465,9 +490,9 @@ public class Laptop implements Serializable {
                         .orElse(-1f),
                     parseMaxTemperatureLoad(temperature_info),
                     parseMaxTemperatureIdle(temperature_info),
-                    1,
-                    createCompareTables(doc),
-                    createCompareBars(doc),
+                    parseBattery(compare_tables, compare_bars),
+                    compare_tables,
+                    compare_bars,
                     parseDisplayInfo(doc)
             );
         });

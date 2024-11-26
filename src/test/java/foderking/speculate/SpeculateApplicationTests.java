@@ -17,6 +17,8 @@ class SpeculateApplicationTests {
         return Stream.of(
                 "https://www.notebookcheck.net/Apple-MacBook-Pro-16-2021-M1-Pro-in-Review-The-best-Multimedia-Laptop-for-Content-Creators.579013.0.html",
             "https://www.notebookcheck.net/Apple-MacBook-Pro-16-2021-M1-Max-Laptop-Review-Full-Performance-without-Throttling.581437.0.html",
+            "https://www.notebookcheck.net/Acer-Aspire-V3-572PG-604M-Notebook-Review.128525.0.html",
+            "https://www.notebookcheck.net/Apple-MacBook-Air-2020-Review-Should-you-get-the-more-powerful-version-of-the-M1-processor.511529.0.html",
 
             "https://www.notebookcheck.net/LG-gram-Pro-2-in-1-16T90SP-review-Light-and-powerful.850220.0.html",
             "https://www.notebookcheck.net/Dell-XPS-17-9730-laptop-review-GeForce-RTX-4070-multimedia-monster.719622.0.html",
@@ -201,11 +203,10 @@ class SpeculateApplicationTests {
     @MethodSource("data")
     void parsingBattery(String link){
         Document doc = Laptop.createDoc(link).get();
-        Map<String, String> tmp = Laptop.createCompareTables(doc);
+        Map<String, String> tmp1 = Laptop.createCompareTables(doc);
+        Map<String, String> tmp2 = Laptop.createCompareBars(doc);
         Integer version = Laptop.parseReviewVersion(doc);
-        int battery = Laptop.parseBattery(tmp);
-        if (version > 5){
-            assertThat(battery).isGreaterThan(0);
-        }
+        int battery = Laptop.parseBattery(tmp1,tmp2);
+        assertThat(battery).isGreaterThan(0);
     }
 }
