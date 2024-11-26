@@ -19,6 +19,7 @@ class SpeculateApplicationTests {
             "https://www.notebookcheck.net/Apple-MacBook-Pro-16-2021-M1-Max-Laptop-Review-Full-Performance-without-Throttling.581437.0.html",
             "https://www.notebookcheck.net/Acer-Aspire-V3-572PG-604M-Notebook-Review.128525.0.html",
             "https://www.notebookcheck.net/Apple-MacBook-Air-2020-Review-Should-you-get-the-more-powerful-version-of-the-M1-processor.511529.0.html",
+            "https://www.notebookcheck.net/Asus-VivoBook-S13-S330UA-i7-FHD-Laptop-Review.376761.0.html",
 
             "https://www.notebookcheck.net/LG-gram-Pro-2-in-1-16T90SP-review-Light-and-powerful.850220.0.html",
             "https://www.notebookcheck.net/Dell-XPS-17-9730-laptop-review-GeForce-RTX-4070-multimedia-monster.719622.0.html",

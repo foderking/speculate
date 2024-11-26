@@ -331,8 +331,10 @@ public class Laptop implements Serializable {
                 .orElse(-1f);
     }
     public static int parseBattery(Map<String, String> compare_tables, Map<String, String> compare_bars, Map<String,String> bar_charts){
+        // order is important
         List<String> table_keys = List.of(
             "Battery Runtime:WiFi v1.3",
+            "Battery Runtime:WiFi Websurfing",
             "WiFi Websurfing"
         );
         List<String> bar_keys = List.of(
@@ -340,11 +342,16 @@ public class Laptop implements Serializable {
             "Battery Runtime - WiFi",
             "Battery Runtime - WiFi (sort by value)",
             "Battery Runtime - WiFi Websurfing",
-            "Battery Runtime - WiFi Websurfing (sort by value)"
+            "Battery Runtime - WiFi v1.3 (sort by value)",
+            "Battery Runtime - WiFi Websurfing (sort by value)",
+            "Battery Runtime:WiFi v1.3",
+            "Battery Runtime:WiFi v1.3 (sort by value)"
         );
         List<String> chart_keys = List.of(
             "WiFi Websurfing",
-            "WiFi Surfing"
+            "WiFi Surfing",
+            "WiFi Websurfing (IE 11)",
+            "WiFi Websurfing (Edge)"
         );
         for (String key: table_keys){
             if (compare_tables.containsKey(key)){
