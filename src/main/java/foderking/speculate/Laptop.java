@@ -499,9 +499,10 @@ public class Laptop implements Serializable {
         return -1f;
     }
     public static float parseCoverageAdobeRGB(Map<String,String> compare_tables, List<String> display_info){
-        if (compare_tables.containsKey("Display:AdobeRGB 1998 Coverage")){
+        Optional<String> value = extractTableValue(compare_tables, "Display:AdobeRGB 1998 Coverage");
+        if (value.isPresent()){
             return Float.parseFloat(
-                compare_tables.get("Display:AdobeRGB 1998 Coverage")
+                value.get()
             );
         }
         for (String info: display_info){
@@ -514,9 +515,10 @@ public class Laptop implements Serializable {
         return -1f;
     }
     public static float parseCoverageP3(Map<String,String> compare_tables, List<String> display_info){
-        if (compare_tables.containsKey("Display:Display P3 Coverage")){
+        Optional<String> value = extractTableValue(compare_tables, "Display:Display P3 Coverage");
+        if (value.isPresent()){
             return Float.parseFloat(
-                compare_tables.get("Display:Display P3 Coverage")
+                value.get()
             );
         }
         for (String info: display_info){
@@ -592,19 +594,19 @@ public class Laptop implements Serializable {
         return -1f;
     }
     public static float parseResponseBW(Map<String,String> compare_tables){
-        String key = "Response Times:Response Time Black / White *";
-        if (compare_tables.containsKey(key)){
+        Optional<String> value = extractTableValue(compare_tables, "Response Times:Response Time Black / White *");
+        if (value.isPresent()){
             return Float.parseFloat(
-                compare_tables.get(key)
+                value.get()
             );
         }
         return -1f;
     }
     public static float parseResponseGG(Map<String,String> compare_tables){
-        String key = "Response Times:Response Time Grey 50% / Grey 80% *";
-        if (compare_tables.containsKey(key)){
+        Optional<String> value = extractTableValue(compare_tables, "Response Times:Response Time Grey 50% / Grey 80% *");
+        if (value.isPresent()){
             return Float.parseFloat(
-                compare_tables.get(key)
+                value.get()
             );
         }
         return -1f;
