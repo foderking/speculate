@@ -33,6 +33,15 @@ public class Laptop implements Serializable {
     private float max_temperature_load;
     private float max_temperature_idle;
     private int battery;
+    private float coverage_srgb;
+    private float coverage_adobergb;
+    private float coverage_p3;
+    private float pwm_freq;
+    private float brightness;
+    private float brightness_dist;
+    private float contrast;
+    private float response_bw;
+    private float response_gg;
 
     @ElementCollection
     private List<String> display_info;
@@ -134,6 +143,60 @@ public class Laptop implements Serializable {
     public void setRating(Integer rating) {
         this.rating = rating;
     }
+    public float getResponseGG(){
+        return response_gg;
+    }
+    public void setResponseGG(float response_gg){
+        this.response_gg = response_gg;
+    }
+    public float getResponseBw(){
+        return response_bw;
+    }
+    public void setResponseBw(float bw){
+        this.response_bw = bw;
+    }
+    public float getContrast(){
+        return contrast;
+    }
+    public void setContrast(float contrast){
+        this.contrast = contrast;
+    }
+    public float getBrightnessDist(){
+        return brightness_dist;
+    }
+    public void setBrightnessDist(float brightness_dist){
+        this.brightness_dist = brightness_dist;
+    }
+    public float getBrightness(){
+        return brightness;
+    }
+    public void setBrightness(float brightness){
+        this.brightness = brightness;
+    }
+    public float getPWMFrequency(){
+        return pwm_freq;
+    }
+    public void setPWMFrequency(float pwm_freq){
+        this.pwm_freq = pwm_freq;
+    }
+    public float getCoverageP3(){
+        return coverage_p3;
+    }
+    public void setCoverageP3(float coverage_p3){
+        this.coverage_p3 = coverage_p3;
+    }
+    public float getCoverageAdobeRGB(){
+        return coverage_adobergb;
+    }
+    public void setCoverageAdobeRGB(float coverage_adobergb){
+        this.coverage_adobergb = coverage_adobergb;
+    }
+    public float getCoverageSRGB(){
+        return coverage_srgb;
+    }
+    public void setCoverageSRGB(float coverage_srgb){
+        this.coverage_srgb = coverage_srgb;
+    }
 
     public Map<String, String> getCompareBars() {
         return compare_bars;
@@ -176,6 +239,15 @@ public class Laptop implements Serializable {
             float max_temperature_load,
             float max_temperature_idle,
             int battery,
+            float coverage_srgb,
+            float coverage_adobergb,
+            float coverage_p3,
+            float pwm_freq,
+            float brightness,
+            float brightness_dist,
+            float contrast,
+            float response_bw,
+            float response_gg,
             Map<String, String> compare_tables,
             Map<String, String> compare_bars,
             Map<String, String> bar_charts,
@@ -200,6 +272,15 @@ public class Laptop implements Serializable {
         this.compare_bars = compare_bars;
         this.bar_charts = bar_charts;
         this.display_info = display_info;
+        this.coverage_srgb = coverage_srgb;
+        this.coverage_adobergb = coverage_adobergb;
+        this.coverage_p3 = coverage_p3;
+        this.pwm_freq = pwm_freq;
+        this.brightness = brightness;
+        this.brightness_dist = brightness_dist;
+        this.contrast = contrast;
+        this.response_bw = response_bw;
+        this.response_gg = response_gg;
     }
 
     public Laptop() {
@@ -393,8 +474,85 @@ public class Laptop implements Serializable {
         }
         return -1;
     }
+    public static float parseCoverageSRGB(Map<String,String> compare_tables){
+        if (compare_tables.containsKey("Display:sRGB Coverage")){
+            return Float.parseFloat(
+                compare_tables.get("Display:sRGB Coverage")
+            );
+        }
+        return -1f;
+    }
+    public static float parseCoverageAdobeRGB(Map<String,String> compare_tables){
+        if (compare_tables.containsKey("Display:AdobeRGB 1998 Coverage")){
+            return Float.parseFloat(
+                compare_tables.get("Display:AdobeRGB 1998 Coverage")
+            );
+        }
+        return -1f;
+    }
+    public static float parseCoverageP3(Map<String,String> compare_tables){
+        if (compare_tables.containsKey("Display:Display P3 Coverage")){
+            return Float.parseFloat(
+                compare_tables.get("Display:Display P3 Coverage")
+            );
+        }
+        return -1f;
+    }
+    public static float parsePWM(Map<String,String> compare_tables){
+        if (compare_tables.containsKey("Response Times:PWM Frequency")){
+            return Float.parseFloat(
+                compare_tables.get("Response Times:PWM Frequency")
+            );
+        }
+        return -1f;
+    }
+    public static float parseBrightness(Map<String,String> compare_tables){
+        String key =  "Screen:Brightness";
+        if (compare_tables.containsKey(key)){
+            return Float.parseFloat(
+                compare_tables.get(key)
+            );
+        }
+        return -1f;
+    }
+    public static float parseBrightnessDistribution(Map<String,String> compare_tables){
+        String key = "Screen:Brightness Distribution";
+        if (compare_tables.containsKey(key)){
+            return Float.parseFloat(
+                compare_tables.get(key)
+            );
+        }
+        return -1f;
+    }
+    public static float parseContrast(Map<String,String> compare_tables){
+        String key = "Screen:Contrast";
+        if (compare_tables.containsKey(key)){
+            return Float.parseFloat(
+                compare_tables.get(key)
+            );
+        }
+        return -1f;
+    }
+    public static float parseResponseBW(Map<String,String> compare_tables){
+        String key = "Response Times:Response Time Black / White *";
+        if (compare_tables.containsKey(key)){
+            return Float.parseFloat(
+                compare_tables.get(key)
+            );
+        }
+        return -1f;
+    }
+    public static float parseResponseGG(Map<String,String> compare_tables){
+        String key = "Response Times:Response Time Grey 50% / Grey 80% *";
+        if (compare_tables.containsKey(key)){
+            return Float.parseFloat(
+                compare_tables.get(key)
+            );
+        }
+        return -1f;
+    }
 
-    public static List<String> parseDisplayInfo(Document doc){
+    public static List<String> createDisplayInfo(Document doc){
         return doc
                 .select("div.auto_analysis")
                 .getFirst()
@@ -538,10 +696,19 @@ public class Laptop implements Serializable {
                     parseMaxTemperatureLoad(temperature_info),
                     parseMaxTemperatureIdle(temperature_info),
                     parseBattery(compare_tables, compare_bars, bar_charts),
+                    parseCoverageSRGB(compare_tables),
+                    parseCoverageAdobeRGB(compare_tables),
+                    parseCoverageP3(compare_tables),
+                    parsePWM(compare_tables),
+                    parseBrightness(compare_tables),
+                    parseBrightnessDistribution(compare_tables),
+                    parseContrast(compare_tables),
+                    parseResponseBW(compare_tables),
+                    parseResponseGG(compare_tables),
                     compare_tables,
                     compare_bars,
                     bar_charts,
-                    parseDisplayInfo(doc)
+                    createDisplayInfo(doc)
             );
         });
     }

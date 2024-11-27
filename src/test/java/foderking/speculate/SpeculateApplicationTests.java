@@ -160,7 +160,7 @@ class SpeculateApplicationTests {
     @MethodSource("data")
     void parsingDisplayInfo(String link){
         Document doc = Laptop.createDoc(link).get();
-        List<String> display_infos = Laptop.parseDisplayInfo(doc);
+        List<String> display_infos = Laptop.createDisplayInfo(doc);
         assertThat(display_infos).isNotEmpty();
     }
     @ParameterizedTest
