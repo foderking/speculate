@@ -23,6 +23,7 @@ class SpeculateApplicationTests {
             "https://www.notebookcheck.net/Dell-Precision-3510-Workstation-Review.169566.0.html",
             "https://www.notebookcheck.net/Apple-MacBook-Pro-15-Late-2016-2-6-GHz-450-Notebook-Review.185254.0.html",
             "https://www.notebookcheck.net/Acer-Aspire-ES1-731G-Notebook-Review.171097.0.html",
+            "https://www.notebookcheck.net/Asus-ROG-GX800VH-Notebook-Preview.171399.0.html",
 
             "https://www.notebookcheck.net/LG-gram-Pro-2-in-1-16T90SP-review-Light-and-powerful.850220.0.html",
             "https://www.notebookcheck.net/Dell-XPS-17-9730-laptop-review-GeForce-RTX-4070-multimedia-monster.719622.0.html",

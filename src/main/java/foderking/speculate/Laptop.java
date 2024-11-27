@@ -334,13 +334,18 @@ public class Laptop implements Serializable {
                 .split(" [(]")[0];
     }
     public static float parseReviewVersion(Document doc) {
-        return Float.parseFloat(
-            doc
-            .select("#tspan4368")
-            .text()
-            .split(" ")[4]
-            .substring(1)
-        );
+        return doc
+                .select("#tspan4368")
+                .stream()
+                .map(e ->
+                    Float.parseFloat(
+                        e
+                        .text()
+                        .split(" ")[4]
+                        .substring(1)
+                    )
+                )
+                .findFirst().orElse(-1f);
     }
     public static Map<String, String> parseInfo(Document doc) {
         return doc
@@ -363,13 +368,19 @@ public class Laptop implements Serializable {
                 );
     }
     public static int parseRating(Document doc) {
-        return Integer.parseInt(
+        return
             doc
                 .select("#tspan4350")
-                .text()
-                .split("%[)]")[0]
-                .split("[(]")[1]
-        );
+                .stream()
+                .map(e ->
+                    Integer.parseInt(
+                        e
+                        .text()
+                        .split("%[)]")[0]
+                        .split("[(]")[1]
+                    )
+                )
+                .findFirst().orElse(-1);
     }
     public static float parseLength(Element dimension_svg){
         return  dimension_svg
