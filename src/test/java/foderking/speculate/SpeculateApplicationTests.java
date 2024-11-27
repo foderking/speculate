@@ -237,4 +237,12 @@ class SpeculateApplicationTests {
         float tmp = Laptop.parseCoverageP3(tmp1,tmp2);
         assertThat(tmp).isGreaterThan(0f);
     }
+    @ParameterizedTest
+    @MethodSource("data")
+    void parsingPWM(String link) {
+        Document doc = Laptop.createDoc(link).get();
+        Map<String, String> tmp1 = Laptop.createCompareTables(doc);
+        float tmp = Laptop.parsePWM(tmp1);
+        assertThat(tmp).isGreaterThan(0f);
+    }
 }
