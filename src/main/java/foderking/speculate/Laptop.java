@@ -615,9 +615,15 @@ public class Laptop implements Serializable {
     public static List<String> createDisplayInfo(Document doc){
         return doc
                 .select("div.auto_analysis")
-                .getFirst()
-                .textNodes()
-                .stream().map(TextNode::text).toList();
+                .stream().findFirst()
+                .map(e ->
+                    e
+                    .textNodes()
+                    .stream()
+                    .map(TextNode::text)
+                    .toList()
+                )
+                .orElse(new ArrayList<>());
     }
     public static List<String> createLinksFromSearch(Document doc){
         return doc
