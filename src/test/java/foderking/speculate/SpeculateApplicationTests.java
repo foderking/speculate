@@ -210,4 +210,13 @@ class SpeculateApplicationTests {
         int battery = Laptop.parseBattery(tmp1,tmp2,tmp3);
         assertThat(battery).isGreaterThan(0);
     }
+    @ParameterizedTest
+    @MethodSource("data")
+    void parsingSRGB(String link){
+        Document doc = Laptop.createDoc(link).get();
+        Map<String, String> tmp1 = Laptop.createCompareTables(doc);
+        List<String> tmp2 = Laptop.createDisplayInfo(doc);
+        float tmp = Laptop.parseCoverageSRGB(tmp1,tmp2);
+        assertThat(tmp).isGreaterThan(0f);
+    }
 }

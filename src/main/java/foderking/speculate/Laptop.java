@@ -474,11 +474,18 @@ public class Laptop implements Serializable {
         }
         return -1;
     }
-    public static float parseCoverageSRGB(Map<String,String> compare_tables){
+    public static float parseCoverageSRGB(Map<String,String> compare_tables, List<String> display_info){
         if (compare_tables.containsKey("Display:sRGB Coverage")){
             return Float.parseFloat(
                 compare_tables.get("Display:sRGB Coverage")
             );
+        }
+        for (String info: display_info){
+            if (info.endsWith("sRGB (Argyll 2.2.0 3D)")){
+                return Float.parseFloat(
+                    info.split("%")[0]
+                );
+            }
         }
         return -1f;
     }
@@ -672,6 +679,7 @@ public class Laptop implements Serializable {
             Map<String, String> compare_tables = createCompareTables(doc);
             Map<String, String> compare_bars = createCompareBars(doc);
             Map<String, String> bar_charts = createBarCharts(doc);
+            List<String> display_info = createDisplayInfo(doc);
             return new Laptop(
                     link,
                     Laptop.parseReviewer(doc),
@@ -696,7 +704,7 @@ public class Laptop implements Serializable {
                     parseMaxTemperatureLoad(temperature_info),
                     parseMaxTemperatureIdle(temperature_info),
                     parseBattery(compare_tables, compare_bars, bar_charts),
-                    parseCoverageSRGB(compare_tables),
+                    parseCoverageSRGB(compare_tables, display_info),
                     parseCoverageAdobeRGB(compare_tables),
                     parseCoverageP3(compare_tables),
                     parsePWM(compare_tables),
@@ -708,7 +716,7 @@ public class Laptop implements Serializable {
                     compare_tables,
                     compare_bars,
                     bar_charts,
-                    createDisplayInfo(doc)
+                    display_info
             );
         });
     }
