@@ -263,4 +263,13 @@ class SpeculateApplicationTests {
         float tmp = Laptop.parseContrast(tmp1, tmp2);
         assertThat(tmp).isGreaterThan(0f);
     }
+    @ParameterizedTest
+    @MethodSource("data")
+    void parsingBrightness(String link) {
+        Document doc = Laptop.createDoc(link).get();
+        Map<String, String> tmp1 = Laptop.createCompareTables(doc);
+        List<String> tmp2 = Laptop.createDisplayInfo(doc);
+        float tmp = Laptop.parseBrightness(tmp1, tmp2);
+        assertThat(tmp).isGreaterThan(0f);
+    }
 }

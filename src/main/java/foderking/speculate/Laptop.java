@@ -531,12 +531,19 @@ public class Laptop implements Serializable {
         }
         return -1f;
     }
-    public static float parseBrightness(Map<String,String> compare_tables){
+    public static float parseBrightness(Map<String,String> compare_tables, List<String> display_info){
         String key =  "Screen:Brightness";
         if (compare_tables.containsKey(key)){
             return Float.parseFloat(
                 compare_tables.get(key)
             );
+        }
+        for (String info: display_info){
+            if (info.startsWith("Maximum")){
+                return Float.parseFloat(
+                    info.split("Average: ")[1].split(" cd/m")[0]
+                );
+            }
         }
         return -1f;
     }
@@ -743,7 +750,7 @@ public class Laptop implements Serializable {
                     parseCoverageAdobeRGB(compare_tables, display_info),
                     parseCoverageP3(compare_tables, display_info),
                     parsePWM(compare_tables),
-                    parseBrightness(compare_tables),
+                    parseBrightness(compare_tables, display_info),
                     parseBrightnessDistribution(compare_tables, display_info),
                     parseContrast(compare_tables, display_info),
                     parseResponseBW(compare_tables),
