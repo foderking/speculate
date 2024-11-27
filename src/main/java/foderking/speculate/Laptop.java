@@ -540,12 +540,19 @@ public class Laptop implements Serializable {
         }
         return -1f;
     }
-    public static float parseBrightnessDistribution(Map<String,String> compare_tables){
+    public static float parseBrightnessDistribution(Map<String,String> compare_tables, List<String> display_info){
         String key = "Screen:Brightness Distribution";
         if (compare_tables.containsKey(key)){
             return Float.parseFloat(
                 compare_tables.get(key)
             );
+        }
+        for (String info: display_info){
+            if (info.startsWith("Brightness Distribution")){
+                return Float.parseFloat(
+                    info.substring(25).split(" %")[0]
+                );
+            }
         }
         return -1f;
     }
@@ -727,7 +734,7 @@ public class Laptop implements Serializable {
                     parseCoverageP3(compare_tables, display_info),
                     parsePWM(compare_tables),
                     parseBrightness(compare_tables),
-                    parseBrightnessDistribution(compare_tables),
+                    parseBrightnessDistribution(compare_tables, display_info),
                     parseContrast(compare_tables),
                     parseResponseBW(compare_tables),
                     parseResponseGG(compare_tables),

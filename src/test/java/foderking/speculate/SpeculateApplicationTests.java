@@ -245,4 +245,13 @@ class SpeculateApplicationTests {
         float tmp = Laptop.parsePWM(tmp1);
         assertThat(tmp).isGreaterThan(0f);
     }
+    @ParameterizedTest
+    @MethodSource("data")
+    void parsingBrightnessDistribution(String link) {
+        Document doc = Laptop.createDoc(link).get();
+        Map<String, String> tmp1 = Laptop.createCompareTables(doc);
+        List<String> tmp2 = Laptop.createDisplayInfo(doc);
+        float tmp = Laptop.parseBrightnessDistribution(tmp1, tmp2);
+        assertThat(tmp).isGreaterThan(0f);
+    }
 }
