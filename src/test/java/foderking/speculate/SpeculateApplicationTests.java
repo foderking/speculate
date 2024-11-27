@@ -272,4 +272,20 @@ class SpeculateApplicationTests {
         float tmp = Laptop.parseBrightness(tmp1, tmp2);
         assertThat(tmp).isGreaterThan(0f);
     }
+    @ParameterizedTest
+    @MethodSource("data")
+    void parsingResponseBW(String link) {
+        Document doc = Laptop.createDoc(link).get();
+        Map<String, String> tmp1 = Laptop.createCompareTables(doc);
+        float tmp = Laptop.parseResponseBW(tmp1);
+        assertThat(tmp).isGreaterThan(0f);
+    }
+    @ParameterizedTest
+    @MethodSource("data")
+    void parsingResponseGG(String link) {
+        Document doc = Laptop.createDoc(link).get();
+        Map<String, String> tmp1 = Laptop.createCompareTables(doc);
+        float tmp = Laptop.parseResponseGG(tmp1);
+        assertThat(tmp).isGreaterThan(0f);
+    }
 }
