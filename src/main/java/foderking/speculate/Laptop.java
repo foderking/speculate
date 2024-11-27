@@ -408,13 +408,19 @@ public class Laptop implements Serializable {
         );
     }
     public static float parseMaxTemperatureLoad(Map<String, String[]> temperature_info){
-            return Arrays.stream(temperature_info.get("Max. Load"))
-                    .map(each -> each.split(" °C")[0].split(" ")[1])
-                    .map(Float::parseFloat)
-                    .max(Float::compareTo)
-                    .orElse(-1f);
+        if (!temperature_info.containsKey("Max. Load")) {
+            return -1f;
+        }
+        return Arrays.stream(temperature_info.get("Max. Load"))
+                .map(each -> each.split(" °C")[0].split(" ")[1])
+                .map(Float::parseFloat)
+                .max(Float::compareTo)
+                .orElse(-1f);
     }
     public static float parseMaxTemperatureIdle(Map<String, String[]> temperature_info){
+        if (!temperature_info.containsKey("Idle")) {
+            return -1f;
+        }
         return Arrays.stream(temperature_info.get("Idle"))
                 .map(each -> each.split(" °C")[0].split(" ")[1])
                 .map(Float::parseFloat)
