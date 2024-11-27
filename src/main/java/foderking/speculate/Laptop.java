@@ -474,10 +474,19 @@ public class Laptop implements Serializable {
         }
         return -1;
     }
+    public static Optional<String> extractTableValue(Map<String,String> compare_tables, String key){
+        if (compare_tables.containsKey(key) && !compare_tables.get(key).isEmpty()){
+            return Optional.of(compare_tables.get(key));
+        }
+        else{
+            return Optional.empty();
+        }
+    }
     public static float parseCoverageSRGB(Map<String,String> compare_tables, List<String> display_info){
-        if (compare_tables.containsKey("Display:sRGB Coverage")){
+        Optional<String> value = extractTableValue(compare_tables, "Display:sRGB Coverage");
+        if (value.isPresent()){
             return Float.parseFloat(
-                compare_tables.get("Display:sRGB Coverage")
+                value.get()
             );
         }
         for (String info: display_info){
