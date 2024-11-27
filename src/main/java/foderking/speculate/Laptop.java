@@ -21,7 +21,7 @@ public class Laptop implements Serializable {
     private String review_date;
     private String picture;
     private String model;
-    private int review_version;
+    private Float review_version;
     @ElementCollection
     @Column(columnDefinition="TEXT", length = 1000)
     private Map<String, String> info;
@@ -101,10 +101,10 @@ public class Laptop implements Serializable {
     public void setInfo(Map<String, String> info) {
         this.info = info;
     }
-    public int getReviewVersion() {
+    public float getReviewVersion() {
         return review_version;
     }
-    public void setReviewVersion(int review_version) {
+    public void setReviewVersion(float review_version) {
         this.review_version = review_version;
     }
     public String getPicture() {
@@ -229,7 +229,7 @@ public class Laptop implements Serializable {
             String review_date,
             String picture,
             String model,
-            int review_version,
+            float review_version,
             Map<String, String> info,
             int rating,
             float length,
@@ -333,8 +333,8 @@ public class Laptop implements Serializable {
                 .text()
                 .split(" [(]")[0];
     }
-    public static int parseReviewVersion(Document doc) {
-        return Integer.parseInt(
+    public static float parseReviewVersion(Document doc) {
+        return Float.parseFloat(
             doc
             .select("#tspan4368")
             .text()
@@ -571,7 +571,7 @@ public class Laptop implements Serializable {
             );
         }
         if (compare_tables.containsKey(key) && compare_tables.get(key).isEmpty()){
-            return Float.MAX_VALUE; // infinite contrast(OLED)
+            return Float.MAX_VALUE; // infinite contrast (OLED)
         }
         for (String info: display_info) {
             if (info.startsWith("Contrast")) {
