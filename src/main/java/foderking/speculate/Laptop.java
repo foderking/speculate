@@ -571,7 +571,7 @@ public class Laptop implements Serializable {
             );
         }
         if (compare_tables.containsKey(key) && compare_tables.get(key).isEmpty()){
-            return Float.MAX_VALUE; // infinite contrast (OLED)
+            return Float.MAX_VALUE; // infinite contrast(OLED)
         }
         for (String info: display_info) {
             if (info.startsWith("Contrast")) {
