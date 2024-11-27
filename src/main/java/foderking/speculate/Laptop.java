@@ -489,11 +489,18 @@ public class Laptop implements Serializable {
         }
         return -1f;
     }
-    public static float parseCoverageAdobeRGB(Map<String,String> compare_tables){
+    public static float parseCoverageAdobeRGB(Map<String,String> compare_tables, List<String> display_info){
         if (compare_tables.containsKey("Display:AdobeRGB 1998 Coverage")){
             return Float.parseFloat(
                 compare_tables.get("Display:AdobeRGB 1998 Coverage")
             );
+        }
+        for (String info: display_info){
+            if (info.endsWith("AdobeRGB 1998 (Argyll 2.2.0 3D)") || info.endsWith("AdobeRGB 1998 (Argyll 1.6.3 3D)")){
+                return Float.parseFloat(
+                    info.split("%")[0]
+                );
+            }
         }
         return -1f;
     }
@@ -705,7 +712,7 @@ public class Laptop implements Serializable {
                     parseMaxTemperatureIdle(temperature_info),
                     parseBattery(compare_tables, compare_bars, bar_charts),
                     parseCoverageSRGB(compare_tables, display_info),
-                    parseCoverageAdobeRGB(compare_tables),
+                    parseCoverageAdobeRGB(compare_tables, display_info),
                     parseCoverageP3(compare_tables),
                     parsePWM(compare_tables),
                     parseBrightness(compare_tables),

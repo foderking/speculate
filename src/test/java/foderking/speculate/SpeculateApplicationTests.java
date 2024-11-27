@@ -219,4 +219,13 @@ class SpeculateApplicationTests {
         float tmp = Laptop.parseCoverageSRGB(tmp1,tmp2);
         assertThat(tmp).isGreaterThan(0f);
     }
+    @ParameterizedTest
+    @MethodSource("data")
+    void parsingAdobeRGB(String link) {
+        Document doc = Laptop.createDoc(link).get();
+        Map<String, String> tmp1 = Laptop.createCompareTables(doc);
+        List<String> tmp2 = Laptop.createDisplayInfo(doc);
+        float tmp = Laptop.parseCoverageAdobeRGB(tmp1,tmp2);
+        assertThat(tmp).isGreaterThan(0f);
+    }
 }
