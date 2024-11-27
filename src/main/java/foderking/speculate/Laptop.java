@@ -556,12 +556,22 @@ public class Laptop implements Serializable {
         }
         return -1f;
     }
-    public static float parseContrast(Map<String,String> compare_tables){
+    public static float parseContrast(Map<String,String> compare_tables, List<String> display_info){
         String key = "Screen:Contrast";
-        if (compare_tables.containsKey(key)){
+        if (compare_tables.containsKey(key) && !compare_tables.get(key).isEmpty()){
             return Float.parseFloat(
                 compare_tables.get(key)
             );
+        }
+        if (compare_tables.containsKey(key) && compare_tables.get(key).isEmpty()){
+            return Float.MAX_VALUE; // infinite contrast (OLED)
+        }
+        for (String info: display_info) {
+            if (info.startsWith("Contrast")) {
+                return Float.parseFloat(
+                    info.substring(10).split(":")[0]
+                );
+            }
         }
         return -1f;
     }
@@ -735,7 +745,7 @@ public class Laptop implements Serializable {
                     parsePWM(compare_tables),
                     parseBrightness(compare_tables),
                     parseBrightnessDistribution(compare_tables, display_info),
-                    parseContrast(compare_tables),
+                    parseContrast(compare_tables, display_info),
                     parseResponseBW(compare_tables),
                     parseResponseGG(compare_tables),
                     compare_tables,
