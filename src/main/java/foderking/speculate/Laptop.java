@@ -32,7 +32,7 @@ public class Laptop implements Serializable {
     private float weight;
     private float max_temperature_load;
     private float max_temperature_idle;
-    private int battery;
+    private float battery;
     private float coverage_srgb;
     private float coverage_adobergb;
     private float coverage_p3;
@@ -53,10 +53,10 @@ public class Laptop implements Serializable {
     private Map<String, String> bar_charts;
 
 
-    public int getBattery() {
+    public float getBattery() {
         return battery;
     }
-    public void setBattery(int battery) {
+    public void setBattery(float battery) {
         this.battery = battery;
     }
     public float getMaxTemperatureLoad(){
@@ -238,7 +238,7 @@ public class Laptop implements Serializable {
             float weight,
             float max_temperature_load,
             float max_temperature_idle,
-            int battery,
+            float battery,
             float coverage_srgb,
             float coverage_adobergb,
             float coverage_p3,
@@ -347,8 +347,7 @@ public class Laptop implements Serializable {
                     Float.parseFloat(
                         e
                         .text()
-                        .split(" ")[4]
-                        .substring(1)
+                        .split("- v")[1]
                     )
                 )
                 .findFirst().orElse(-1f);
@@ -446,7 +445,7 @@ public class Laptop implements Serializable {
                 .max(Float::compareTo)
                 .orElse(-1f);
     }
-    public static int parseBattery(Map<String, String> compare_tables, Map<String, String> compare_bars, Map<String,String> bar_charts){
+    public static float parseBattery(Map<String, String> compare_tables, Map<String, String> compare_bars, Map<String,String> bar_charts){
         // order is important
         List<String> table_keys = List.of(
             "Battery Runtime:WiFi v1.3",
@@ -470,7 +469,7 @@ public class Laptop implements Serializable {
         for (String key: table_keys){
             Optional<String> value = extractTableValue(compare_tables, key);
             if (value.isPresent()){
-                return Integer.parseInt(
+                return Float.parseFloat(
                     value.get()
                 );
             }
@@ -478,7 +477,7 @@ public class Laptop implements Serializable {
         for (String key: bar_keys){
             Optional<String> value = extractTableValue(compare_tables, key);
             if (value.isPresent()){
-                return Integer.parseInt(
+                return Float.parseFloat(
                     value.get()
                 );
             }
@@ -487,16 +486,16 @@ public class Laptop implements Serializable {
             Optional<String> value = extractTableValue(compare_tables, key);
             if (value.isPresent()){
                 String[] tmp = value.get().split("h");
-                int hours  = Integer.parseInt(tmp[0]);
-                int minutes = Integer.parseInt(tmp[1].substring(1,3));
+                float hours  = Float.parseFloat(tmp[0]);
+                float minutes = Float.parseFloat(tmp[1].substring(1,3));
                 return hours * 60 + minutes;
             }
         }
         for (String key: bar_charts.keySet()) {
             if (key.startsWith("WiFi Websurfing")) {
                 String[] tmp = bar_charts.get(key).split("h");
-                int hours  = Integer.parseInt(tmp[0]);
-                int minutes = Integer.parseInt(tmp[1].substring(1,3));
+                float hours  = Float.parseFloat(tmp[0]);
+                float minutes = Float.parseFloat(tmp[1].substring(1,3));
                 return hours * 60 + minutes;
             }
         }

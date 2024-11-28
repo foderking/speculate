@@ -27,6 +27,7 @@ class SpeculateApplicationTests {
             "https://www.notebookcheck.net/Acer-Graphics-Dock-with-Nvidia-GTX-960M-Review.175429.0.html",
             "https://www.notebookcheck.net/Apple-MacBook-12-Early-2016-1-1-GHz-Review.164797.0.html",
             "https://www.notebookcheck.net/MIFcom-EG7-Clevo-N170RF-Notebook-Review.158477.0.html",
+            "https://www.notebookcheck.net/Medion-S20-laptop-review-17-inch-multimedia-notebook-with-Intel-Core-Ultra-7.878056.0.html",
 
             "https://www.notebookcheck.net/LG-gram-Pro-2-in-1-16T90SP-review-Light-and-powerful.850220.0.html",
             "https://www.notebookcheck.net/Dell-XPS-17-9730-laptop-review-GeForce-RTX-4070-multimedia-monster.719622.0.html",
@@ -214,7 +215,7 @@ class SpeculateApplicationTests {
         Map<String, String> tmp1 = Laptop.createCompareTables(doc);
         Map<String, String> tmp2 = Laptop.createCompareBars(doc);
         Map<String, String> tmp3 = Laptop.createBarCharts(doc);
-        int battery = Laptop.parseBattery(tmp1,tmp2,tmp3);
+        float battery = Laptop.parseBattery(tmp1,tmp2,tmp3);
         assertThat(battery).isGreaterThan(0);
     }
     @ParameterizedTest
