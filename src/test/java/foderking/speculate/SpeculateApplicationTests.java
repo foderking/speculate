@@ -31,6 +31,7 @@ class SpeculateApplicationTests {
             "https://www.notebookcheck.net/GPD-Win-Mini-Zen-4-handheld-review-Solid-alternative-to-the-Asus-ROG-Ally.845030.0.html",
             "https://www.notebookcheck.net/Asus-P1511CEA-reviewed-An-affordable-office-laptop-for-school-office-leisure.686060.0.html",
             "https://www.notebookcheck.net/Lenovo-Legion-5-Pro-16-review-A-gaming-laptop-with-a-bright-165-Hz-display.554931.0.html",
+            "https://www.notebookcheck.net/Lenovo-ThinkPad-X1-Extreme-G4-Review-The-best-Multimedia-Laptop-thanks-to-Core-i9-and-RTX-3080.588585.0.html",
             // v3 (archived)
             "https://www.notebookcheck.net/Review-Lenovo-ThinkPad-S540-20B30059GE-Ultrabook.111259.0.html",
             "https://www.notebookcheck.net/Review-Acer-Aspire-E1-470P-6659-Notebook.108284.0.html",

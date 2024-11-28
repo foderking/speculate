@@ -570,10 +570,10 @@ public class Laptop implements Serializable {
         return -1f;
     }
     public static float parseBrightness(Map<String,String> compare_tables, List<String> display_info){
-        String key =  "Screen:Brightness";
-        if (compare_tables.containsKey(key)){
+        Optional<String> value = extractTableValue(compare_tables, "Screen:Brightness");
+        if (value.isPresent()){
             return Float.parseFloat(
-                compare_tables.get(key)
+                value.get()
             );
         }
         for (String info: display_info){
@@ -586,10 +586,10 @@ public class Laptop implements Serializable {
         return -1f;
     }
     public static float parseBrightnessDistribution(Map<String,String> compare_tables, List<String> display_info){
-        String key = "Screen:Brightness Distribution";
-        if (compare_tables.containsKey(key)){
+        Optional<String> value = extractTableValue(compare_tables, "Screen:Brightness Distribution");
+        if (value.isPresent()){
             return Float.parseFloat(
-                compare_tables.get(key)
+                value.get()
             );
         }
         for (String info: display_info){
