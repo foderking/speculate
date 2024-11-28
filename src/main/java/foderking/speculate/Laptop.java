@@ -751,7 +751,8 @@ public class Laptop implements Serializable {
                 .collect(
                     Collectors.toMap(
                         td -> td.text(),
-                        td -> td.parent().parent().selectFirst("td.runtime").text()
+                        td -> td.parent().parent().selectFirst("td.runtime").text(),
+                        (key1, key2) -> key1 // fix duplicate key bug
                     )
                 );
     }
