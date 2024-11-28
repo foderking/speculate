@@ -60,10 +60,8 @@ public class Seeder implements CommandLineRunner {
 
     public void populateDB(){
         int max_concurrent = 5;
-        int start_year = 2016;
-//        int start_year = 2013; // earliest review
-//        int current_year = Year.now().getValue();
-        int current_year = start_year;
+        int start_year = 2013; // earliest review
+        int current_year = Year.now().getValue();
         Semaphore semaphore = new Semaphore(max_concurrent); // prevent read timeout
 
         logger.info("scraping all laptop reviews");
@@ -86,8 +84,9 @@ public class Seeder implements CommandLineRunner {
                                 Optional<Laptop> laptop = Laptop.create(link);
                                 saveParsedLaptoptoDB(laptop);
                             }
-                            catch (InterruptedException e){
-                                logger.error("Error " + e.getMessage());
+                            catch (Exception e){
+                                System.out.println(link);
+                                e.printStackTrace();
                             }
                             finally {
                                 semaphore.release();
