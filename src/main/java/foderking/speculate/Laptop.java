@@ -468,22 +468,25 @@ public class Laptop implements Serializable {
             "WiFi Surfing"
         );
         for (String key: table_keys){
-            if (compare_tables.containsKey(key)){
+            Optional<String> value = extractTableValue(compare_tables, key);
+            if (value.isPresent()){
                 return Integer.parseInt(
-                    compare_tables.get(key)
+                    value.get()
                 );
             }
         }
         for (String key: bar_keys){
-            if (compare_bars.containsKey(key)){
+            Optional<String> value = extractTableValue(compare_tables, key);
+            if (value.isPresent()){
                 return Integer.parseInt(
-                    compare_bars.get(key)
+                    value.get()
                 );
             }
         }
         for (String key: chart_keys){
-            if (bar_charts.containsKey(key)){
-                String[] tmp = bar_charts.get(key).split("h");
+            Optional<String> value = extractTableValue(compare_tables, key);
+            if (value.isPresent()){
+                String[] tmp = value.get().split("h");
                 int hours  = Integer.parseInt(tmp[0]);
                 int minutes = Integer.parseInt(tmp[1].substring(1,3));
                 return hours * 60 + minutes;
