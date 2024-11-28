@@ -25,6 +25,7 @@ class SpeculateApplicationTests {
             "https://www.notebookcheck.net/Acer-Aspire-ES1-731G-Notebook-Review.171097.0.html",
             "https://www.notebookcheck.net/Asus-ROG-GX800VH-Notebook-Preview.171399.0.html",
             "https://www.notebookcheck.net/Acer-Graphics-Dock-with-Nvidia-GTX-960M-Review.175429.0.html",
+            "https://www.notebookcheck.net/Apple-MacBook-12-Early-2016-1-1-GHz-Review.164797.0.html",
 
             "https://www.notebookcheck.net/LG-gram-Pro-2-in-1-16T90SP-review-Light-and-powerful.850220.0.html",
             "https://www.notebookcheck.net/Dell-XPS-17-9730-laptop-review-GeForce-RTX-4070-multimedia-monster.719622.0.html",

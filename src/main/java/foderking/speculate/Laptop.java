@@ -413,16 +413,18 @@ public class Laptop implements Serializable {
         );
     }
     public static float parseWeight(Element dimension_svg){
-        return Float.parseFloat(
-                dimension_svg
+            return dimension_svg
                     .select("text[text-anchor]")
                     .eachText()
                     .stream()
                     .filter(e -> e.endsWith("kg"))
                     .findFirst()
-                    .get()
-                    .split(" ")[0]
-        );
+                    .map(e ->
+                        Float.parseFloat(
+                            e.split(" ")[0]
+                        )
+                    )
+                    .orElse(-1f);
     }
     public static float parseMaxTemperatureLoad(Map<String, String[]> temperature_info){
         if (!temperature_info.containsKey("Max. Load")) {
