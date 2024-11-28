@@ -28,10 +28,8 @@ class SpeculateApplicationTests {
             "https://www.notebookcheck.net/Apple-MacBook-12-Early-2016-1-1-GHz-Review.164797.0.html",
             "https://www.notebookcheck.net/MIFcom-EG7-Clevo-N170RF-Notebook-Review.158477.0.html",
             "https://www.notebookcheck.net/Medion-S20-laptop-review-17-inch-multimedia-notebook-with-Intel-Core-Ultra-7.878056.0.html",
-
-            "https://www.notebookcheck.net/LG-gram-Pro-2-in-1-16T90SP-review-Light-and-powerful.850220.0.html",
-            "https://www.notebookcheck.net/Dell-XPS-17-9730-laptop-review-GeForce-RTX-4070-multimedia-monster.719622.0.html",
-            "https://www.notebookcheck.net/Lenovo-ThinkPad-X1-Carbon-G6-2018-i5-8350U-Full-HD-Touch-256GB-Laptop-Review.331428.0.html",
+            "https://www.notebookcheck.net/GPD-Win-Mini-Zen-4-handheld-review-Solid-alternative-to-the-Asus-ROG-Ally.845030.0.html",
+            "https://www.notebookcheck.net/Asus-P1511CEA-reviewed-An-affordable-office-laptop-for-school-office-leisure.686060.0.html",
             // v3 (archived)
             "https://www.notebookcheck.net/Review-Lenovo-ThinkPad-S540-20B30059GE-Ultrabook.111259.0.html",
             "https://www.notebookcheck.net/Review-Acer-Aspire-E1-470P-6659-Notebook.108284.0.html",

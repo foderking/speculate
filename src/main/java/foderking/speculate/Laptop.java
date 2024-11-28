@@ -495,7 +495,7 @@ public class Laptop implements Serializable {
             if (key.startsWith("WiFi Websurfing")) {
                 String[] tmp = bar_charts.get(key).split("h");
                 float hours  = Float.parseFloat(tmp[0]);
-                float minutes = Float.parseFloat(tmp[1].substring(1,3));
+                float minutes = Float.parseFloat(tmp[1].split("m")[0]);
                 return hours * 60 + minutes;
             }
         }
