@@ -329,9 +329,15 @@ public class Laptop implements Serializable {
     public static String parseModel(Document doc) {
         return doc
                 .select(".specs_header")
-                .first()
-                .text()
-                .split(" [(]")[0];
+                .stream()
+                .map(e ->
+                    e
+                    .text()
+                    .split(" [(]")[0]
+                )
+                .findFirst()
+                .orElse("");
+
     }
     public static float parseReviewVersion(Document doc) {
         return doc
