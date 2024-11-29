@@ -21,28 +21,34 @@
 </head>
 <body>
     <h1>Speculate</h1>
-    <h4>Search results:</h4>
+    <h4><span th:text="${laptops.size()}" /> search results:</h4>
     <table>
         <tbody>
             <tr>
                 <th>Laptop Model</th>
-                <th>Laptop Rating (%)</th>
+                <th>Battery (mins)</th>
+                <th>Coverage sRGB</th>
+                <th>Coverage Adobe RGB</th>
+                <th>Coverage P3</th>
+                <th>Brightness</th>
+                <th>Max Temp Load (°C)</th>
+                <th>Max Temp Idle (°C)</th>
                 <th>Laptop Thickness (mm)</th>
                 <th>Laptop Weight (kg)</th>
                 <th>Laptop Version</th>
-                <th>Battery (mins)</th>
-                <th>Max Temp Load (°C)</th>
-                <th>Max Temp Idle (°C)</th>
             </tr>
             <tr th:each="laptop: ${laptops}">
                 <td><a th:href="${laptop.link}"><p th:text="${laptop.model}"  /></a></td>
-                <td th:text="${laptop.rating}" />
+                <td th:text="${laptop.battery}" />
+                <td th:text="${laptop.coverageSRGB}" />
+                <td th:text="${laptop.coverageAdobeRGB}" />
+                <td th:text="${laptop.coverageP3}" />
+                <td th:text="${laptop.brightness}" />
+                <td th:text="${laptop.maxTemperatureLoad}" />
+                <td th:text="${laptop.maxTemperatureIdle}" />
                 <td th:text="${laptop.thickness}" />
                 <td th:text="${laptop.weight}" />
                 <td th:text="${laptop.reviewVersion}" />
-                <td th:text="${laptop.battery}" />
-                <td th:text="${laptop.maxTemperatureLoad}" />
-                <td th:text="${laptop.maxTemperatureIdle}" />
             </tr>
         </tbody>
     </table>

@@ -6,6 +6,44 @@ public class Filter implements Serializable {
 
     private Float weight;
     private Float thickness;
+    private Float p3;
+    private Float sRGB;
+
+    public Float getBrightness() {
+        return brightness;
+    }
+
+    public void setBrightness(Float brightness) {
+        this.brightness = brightness;
+    }
+
+    private Float brightness;
+
+    public Float getAdobeRGB() {
+        return adobeRGB;
+    }
+
+    public void setAdobeRGB(Float adobeRGB) {
+        this.adobeRGB = adobeRGB;
+    }
+
+    public Float getsRGB() {
+        return sRGB;
+    }
+
+    public void setsRGB(Float sRGB) {
+        this.sRGB = sRGB;
+    }
+
+    public Float getP3() {
+        return p3;
+    }
+
+    public void setP3(Float p3) {
+        this.p3 = p3;
+    }
+
+    private Float adobeRGB;
 
     public Integer getBattery() {
         return battery;
