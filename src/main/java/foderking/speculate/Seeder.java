@@ -73,7 +73,7 @@ public class Seeder implements CommandLineRunner {
             Optional<List<String>> links =
                 parseYear(year)
                 .map(Jsoup::parse)
-                .map(Laptop::createLinksFromSearch);
+                .map(LaptopParser::createLinksFromSearch);
             if (links.isPresent()) {
                 logger.info(links.get().size() + " links found");
                 try(ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {

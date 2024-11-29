@@ -53,247 +53,247 @@ class SpeculateApplicationTests {
     @ParameterizedTest
     @MethodSource("data")
     void parsingModel(String link) {
-        Document doc = Laptop.createDoc(link).get();
-        String model = Laptop.parseModel(doc);
+        Document doc = LaptopParser.createDoc(link).get();
+        String model = LaptopParser.parseModel(doc);
         assertThat(model).isNotEmpty();
     }
     @ParameterizedTest
     @MethodSource("data")
     void parsingPicture(String link) {
-        Document doc = Laptop.createDoc(link).get();
-        String picture = Laptop.parsePicture(doc);
+        Document doc = LaptopParser.createDoc(link).get();
+        String picture = LaptopParser.parsePicture(doc);
         assertThat(picture).isNotEmpty();
     }
     @ParameterizedTest
     @MethodSource("data")
     void parsingDate(String link) {
-        Document doc = Laptop.createDoc(link).get();
-        String date  = Laptop.parseReviewDate(doc);
+        Document doc = LaptopParser.createDoc(link).get();
+        String date  = LaptopParser.parseReviewDate(doc);
         assertThat(date).isNotEmpty();
     }
     @ParameterizedTest
     @MethodSource("data")
     void parsingReviewer(String link) {
-        Document doc = Laptop.createDoc(link).get();
-        String reviewer = Laptop.parseReviewer(doc);
+        Document doc = LaptopParser.createDoc(link).get();
+        String reviewer = LaptopParser.parseReviewer(doc);
         assertThat(reviewer).isNotEmpty();
     }
     @ParameterizedTest
     @MethodSource("data")
     void parsingReviewVersion(String link) {
-        Document doc = Laptop.createDoc(link).get();
-        float review_version = Laptop.parseReviewVersion(doc);
+        Document doc = LaptopParser.createDoc(link).get();
+        float review_version = LaptopParser.parseReviewVersion(doc);
         assertThat(review_version).isGreaterThan(0);
     }
     @ParameterizedTest
     @MethodSource("data")
     void parsingInfo(String link) {
-        Document doc = Laptop.createDoc(link).get();
-        Map<String, String> info = Laptop.parseInfo(doc);
+        Document doc = LaptopParser.createDoc(link).get();
+        Map<String, String> info = LaptopParser.parseInfo(doc);
         assertThat(info.size()).isGreaterThan(0);
     }
     @ParameterizedTest
     @MethodSource("data")
     void parsingRating(String link) {
-        Document doc = Laptop.createDoc(link).get();
-        Integer rating = Laptop.parseRating(doc);
+        Document doc = LaptopParser.createDoc(link).get();
+        Integer rating = LaptopParser.parseRating(doc);
         assertThat(rating).isGreaterThan(0);
     }
     @ParameterizedTest
     @MethodSource("data")
     void parsingLength(String link) {
-        Document doc = Laptop.createDoc(link).get();
-        Optional<Element> svg_node = Laptop.selectDimensionSVG(doc);
+        Document doc = LaptopParser.createDoc(link).get();
+        Optional<Element> svg_node = LaptopParser.selectDimensionSVG(doc);
         // reviews below version 5 appear not to have dimensions
         if (svg_node.isPresent()) {
             assertThat(
                 svg_node
-                    .map(Laptop::parseLength)
+                    .map(LaptopParser::parseLength)
                     .get()
             ).isGreaterThan(0f);
         }
         else {
-            assertThat(Laptop.parseReviewVersion(doc)).isLessThan(5);
+            assertThat(LaptopParser.parseReviewVersion(doc)).isLessThan(5);
         }
     }
     @ParameterizedTest
     @MethodSource("data")
     void parsingThickness(String link) {
-        Document doc = Laptop.createDoc(link).get();
-        Optional<Element> svg_node = Laptop.selectDimensionSVG(doc);
+        Document doc = LaptopParser.createDoc(link).get();
+        Optional<Element> svg_node = LaptopParser.selectDimensionSVG(doc);
         if (svg_node.isPresent()) {
             assertThat(
                 svg_node
-                    .map(Laptop::parseThickness)
+                    .map(LaptopParser::parseThickness)
                     .get()
             ).isGreaterThan(0f);
         }
         else {
-            assertThat(Laptop.parseReviewVersion(doc)).isLessThan(5);
+            assertThat(LaptopParser.parseReviewVersion(doc)).isLessThan(5);
         }
     }
     @ParameterizedTest
     @MethodSource("data")
     void parsingWidth(String link) {
-        Document doc = Laptop.createDoc(link).get();
-        Optional<Element> svg_node = Laptop.selectDimensionSVG(doc);
+        Document doc = LaptopParser.createDoc(link).get();
+        Optional<Element> svg_node = LaptopParser.selectDimensionSVG(doc);
         if (svg_node.isPresent()) {
             assertThat(
                 svg_node
-                    .map(Laptop::parseWidth)
+                    .map(LaptopParser::parseWidth)
                     .get()
             ).isGreaterThan(0f);
         }
         else {
-            assertThat(Laptop.parseReviewVersion(doc)).isLessThan(5);
+            assertThat(LaptopParser.parseReviewVersion(doc)).isLessThan(5);
         }
     }
     @ParameterizedTest
     @MethodSource("data")
     void parsingWeight(String link) {
-        Document doc = Laptop.createDoc(link).get();
-        Optional<Element> svg_node = Laptop.selectDimensionSVG(doc);
+        Document doc = LaptopParser.createDoc(link).get();
+        Optional<Element> svg_node = LaptopParser.selectDimensionSVG(doc);
         if (svg_node.isPresent()) {
             assertThat(
                 svg_node
-                    .map(Laptop::parseWeight)
+                    .map(LaptopParser::parseWeight)
                     .get()
             ).isGreaterThan(0f);
         }
         else {
-            assertThat(Laptop.parseReviewVersion(doc)).isLessThan(5);
+            assertThat(LaptopParser.parseReviewVersion(doc)).isLessThan(5);
         }
     }
     @ParameterizedTest
     @MethodSource("data")
     void parsingDisplayInfo(String link){
-        Document doc = Laptop.createDoc(link).get();
-        List<String> display_infos = Laptop.createDisplayInfo(doc);
+        Document doc = LaptopParser.createDoc(link).get();
+        List<String> display_infos = LaptopParser.createDisplayInfo(doc);
         assertThat(display_infos).isNotEmpty();
     }
     @ParameterizedTest
     @MethodSource("data")
     void parsingTemperatureInfo(String link){
-        Document doc = Laptop.createDoc(link).get();
-        var temperature_info = Laptop.createTemperatureInfo(doc);
+        Document doc = LaptopParser.createDoc(link).get();
+        var temperature_info = LaptopParser.createTemperatureInfo(doc);
         assertThat(temperature_info).isNotEmpty();
         temperature_info.values().forEach(e -> assertThat(e.length).isGreaterThanOrEqualTo(4));
     }
     @ParameterizedTest
     @MethodSource("data")
     void parsingCompareBars(String link){
-        Document doc = Laptop.createDoc(link).get();
-        var dict = Laptop.createCompareBars(doc);
+        Document doc = LaptopParser.createDoc(link).get();
+        var dict = LaptopParser.createCompareBars(doc);
         assertThat(dict).isNotEmpty();
     }
 
     @ParameterizedTest
     @MethodSource("data")
     void parsingCompareTables(String link){
-        Document doc = Laptop.createDoc(link).get();
-        var dict = Laptop.createCompareTables(doc);
+        Document doc = LaptopParser.createDoc(link).get();
+        var dict = LaptopParser.createCompareTables(doc);
         assertThat(dict).isNotEmpty();
     }
     @ParameterizedTest
     @MethodSource("data")
     void parsingMaxTempLoad(String link){
-        Document doc = Laptop.createDoc(link).get();
-        Map<String, String[]> tmp = Laptop.createTemperatureInfo(doc);
-        assertThat(Laptop.parseMaxTemperatureLoad(tmp)).isGreaterThan(0f);
+        Document doc = LaptopParser.createDoc(link).get();
+        Map<String, String[]> tmp = LaptopParser.createTemperatureInfo(doc);
+        assertThat(LaptopParser.parseMaxTemperatureLoad(tmp)).isGreaterThan(0f);
     }
     @ParameterizedTest
     @MethodSource("data")
     void parsingMaxTempIdle(String link){
-        Document doc = Laptop.createDoc(link).get();
-        Map<String, String[]> tmp = Laptop.createTemperatureInfo(doc);
-        assertThat(Laptop.parseMaxTemperatureIdle(tmp)).isGreaterThan(0f);
+        Document doc = LaptopParser.createDoc(link).get();
+        Map<String, String[]> tmp = LaptopParser.createTemperatureInfo(doc);
+        assertThat(LaptopParser.parseMaxTemperatureIdle(tmp)).isGreaterThan(0f);
     }
     @ParameterizedTest
     @MethodSource("data")
     void parsingBattery(String link){
-        Document doc = Laptop.createDoc(link).get();
-        Map<String, String> tmp1 = Laptop.createCompareTables(doc);
-        Map<String, String> tmp2 = Laptop.createCompareBars(doc);
-        Map<String, String> tmp3 = Laptop.createBarCharts(doc);
-        float battery = Laptop.parseBattery(tmp1,tmp2,tmp3);
+        Document doc = LaptopParser.createDoc(link).get();
+        Map<String, String> tmp1 = LaptopParser.createCompareTables(doc);
+        Map<String, String> tmp2 = LaptopParser.createCompareBars(doc);
+        Map<String, String> tmp3 = LaptopParser.createBarCharts(doc);
+        float battery = LaptopParser.parseBattery(tmp1,tmp2,tmp3);
         assertThat(battery).isGreaterThan(0);
     }
     @ParameterizedTest
     @MethodSource("data")
     void parsingSRGB(String link){
-        Document doc = Laptop.createDoc(link).get();
-        Map<String, String> tmp1 = Laptop.createCompareTables(doc);
-        List<String> tmp2 = Laptop.createDisplayInfo(doc);
-        float tmp = Laptop.parseCoverageSRGB(tmp1,tmp2);
+        Document doc = LaptopParser.createDoc(link).get();
+        Map<String, String> tmp1 = LaptopParser.createCompareTables(doc);
+        List<String> tmp2 = LaptopParser.createDisplayInfo(doc);
+        float tmp = LaptopParser.parseCoverageSRGB(tmp1,tmp2);
         assertThat(tmp).isGreaterThan(0f);
     }
     @ParameterizedTest
     @MethodSource("data")
     void parsingAdobeRGB(String link) {
-        Document doc = Laptop.createDoc(link).get();
-        Map<String, String> tmp1 = Laptop.createCompareTables(doc);
-        List<String> tmp2 = Laptop.createDisplayInfo(doc);
-        float tmp = Laptop.parseCoverageAdobeRGB(tmp1,tmp2);
+        Document doc = LaptopParser.createDoc(link).get();
+        Map<String, String> tmp1 = LaptopParser.createCompareTables(doc);
+        List<String> tmp2 = LaptopParser.createDisplayInfo(doc);
+        float tmp = LaptopParser.parseCoverageAdobeRGB(tmp1,tmp2);
         assertThat(tmp).isGreaterThan(0f);
     }
     @ParameterizedTest
     @MethodSource("data")
     void parsingP3(String link) {
-        Document doc = Laptop.createDoc(link).get();
-        Map<String, String> tmp1 = Laptop.createCompareTables(doc);
-        List<String> tmp2 = Laptop.createDisplayInfo(doc);
-        float tmp = Laptop.parseCoverageP3(tmp1,tmp2);
+        Document doc = LaptopParser.createDoc(link).get();
+        Map<String, String> tmp1 = LaptopParser.createCompareTables(doc);
+        List<String> tmp2 = LaptopParser.createDisplayInfo(doc);
+        float tmp = LaptopParser.parseCoverageP3(tmp1,tmp2);
         assertThat(tmp).isGreaterThan(0f);
     }
     @ParameterizedTest
     @MethodSource("data")
     void parsingPWM(String link) {
-        Document doc = Laptop.createDoc(link).get();
-        Map<String, String> tmp1 = Laptop.createCompareTables(doc);
-        float tmp = Laptop.parsePWM(tmp1);
+        Document doc = LaptopParser.createDoc(link).get();
+        Map<String, String> tmp1 = LaptopParser.createCompareTables(doc);
+        float tmp = LaptopParser.parsePWM(tmp1);
         assertThat(tmp).isGreaterThan(0f);
     }
     @ParameterizedTest
     @MethodSource("data")
     void parsingBrightnessDistribution(String link) {
-        Document doc = Laptop.createDoc(link).get();
-        Map<String, String> tmp1 = Laptop.createCompareTables(doc);
-        List<String> tmp2 = Laptop.createDisplayInfo(doc);
-        float tmp = Laptop.parseBrightnessDistribution(tmp1, tmp2);
+        Document doc = LaptopParser.createDoc(link).get();
+        Map<String, String> tmp1 = LaptopParser.createCompareTables(doc);
+        List<String> tmp2 = LaptopParser.createDisplayInfo(doc);
+        float tmp = LaptopParser.parseBrightnessDistribution(tmp1, tmp2);
         assertThat(tmp).isGreaterThan(0f);
     }
     @ParameterizedTest
     @MethodSource("data")
     void parsingContrast(String link) {
-        Document doc = Laptop.createDoc(link).get();
-        Map<String, String> tmp1 = Laptop.createCompareTables(doc);
-        List<String> tmp2 = Laptop.createDisplayInfo(doc);
-        float tmp = Laptop.parseContrast(tmp1, tmp2);
+        Document doc = LaptopParser.createDoc(link).get();
+        Map<String, String> tmp1 = LaptopParser.createCompareTables(doc);
+        List<String> tmp2 = LaptopParser.createDisplayInfo(doc);
+        float tmp = LaptopParser.parseContrast(tmp1, tmp2);
         assertThat(tmp).isGreaterThan(0f);
     }
     @ParameterizedTest
     @MethodSource("data")
     void parsingBrightness(String link) {
-        Document doc = Laptop.createDoc(link).get();
-        Map<String, String> tmp1 = Laptop.createCompareTables(doc);
-        List<String> tmp2 = Laptop.createDisplayInfo(doc);
-        float tmp = Laptop.parseBrightness(tmp1, tmp2);
+        Document doc = LaptopParser.createDoc(link).get();
+        Map<String, String> tmp1 = LaptopParser.createCompareTables(doc);
+        List<String> tmp2 = LaptopParser.createDisplayInfo(doc);
+        float tmp = LaptopParser.parseBrightness(tmp1, tmp2);
         assertThat(tmp).isGreaterThan(0f);
     }
     @ParameterizedTest
     @MethodSource("data")
     void parsingResponseBW(String link) {
-        Document doc = Laptop.createDoc(link).get();
-        Map<String, String> tmp1 = Laptop.createCompareTables(doc);
-        float tmp = Laptop.parseResponseBW(tmp1);
+        Document doc = LaptopParser.createDoc(link).get();
+        Map<String, String> tmp1 = LaptopParser.createCompareTables(doc);
+        float tmp = LaptopParser.parseResponseBW(tmp1);
         assertThat(tmp).isGreaterThan(0f);
     }
     @ParameterizedTest
     @MethodSource("data")
     void parsingResponseGG(String link) {
-        Document doc = Laptop.createDoc(link).get();
-        Map<String, String> tmp1 = Laptop.createCompareTables(doc);
-        float tmp = Laptop.parseResponseGG(tmp1);
+        Document doc = LaptopParser.createDoc(link).get();
+        Map<String, String> tmp1 = LaptopParser.createCompareTables(doc);
+        float tmp = LaptopParser.parseResponseGG(tmp1);
         assertThat(tmp).isGreaterThan(0f);
     }
 }
