@@ -11,3 +11,8 @@ A web application for comparing laptop specs.
 
 Navigate to the root directory, open the terminal and run
 `./mvnw spring-boot:run`
+
+## Interface
+
+![searching](./pic1.jpg)
+![results](./pic2.jpg)
