@@ -3,8 +3,11 @@ A web application for comparing laptop specs.
 
 ##  Getting Started
 
-- add the following environment variables for the database `H2_USERNAME`, `H2_PASSWORD`
+- The application requires java 21, make sure you have at least openjdk-21, and maven installed
+- The application creates an in-memory database availabe at `/h2-console`
+- You can set the credentials with the following environment variables: `H2_USERNAME`, `H2_PASSWORD`
 
-## Seeding Database
+## Running
 
-- commandline arguments control how the database is seeded
+Navigate to the root directory, open the terminal and run
+`./mvnw spring-boot:run`
