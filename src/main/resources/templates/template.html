@@ -33,12 +33,11 @@
                 <th>Brightness</th>
                 <th>Max Temp Load (°C)</th>
                 <th>Max Temp Idle (°C)</th>
-                <th>Laptop Thickness (mm)</th>
                 <th>Laptop Weight (kg)</th>
-                <th>Laptop Version</th>
+                <th>Year</th>
             </tr>
             <tr th:each="laptop: ${laptops}">
-                <td><a th:href="${laptop.link}"><p th:text="${laptop.model}"  /></a></td>
+                <td><a target="_blank" th:href="${laptop.link}"><p th:text="${laptop.model}"  /></a></td>
                 <td th:text="${laptop.battery}" />
                 <td th:text="${laptop.coverageSRGB}" />
                 <td th:text="${laptop.coverageAdobeRGB}" />
@@ -46,9 +45,8 @@
                 <td th:text="${laptop.brightness}" />
                 <td th:text="${laptop.maxTemperatureLoad}" />
                 <td th:text="${laptop.maxTemperatureIdle}" />
-                <td th:text="${laptop.thickness}" />
                 <td th:text="${laptop.weight}" />
-                <td th:text="${laptop.reviewVersion}" />
+                <td th:text="${laptop.reviewDate}" />
             </tr>
         </tbody>
     </table>
