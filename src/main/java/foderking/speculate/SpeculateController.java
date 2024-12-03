@@ -26,7 +26,7 @@ public class SpeculateController {
                 maxFloat(f.getWeight()), maxFloat(f.getThickness()),
                 maxInt(f.getMax_temperature_load()), maxInt(f.getMax_temperature_idle()),
                 minInt(f.getBattery()), minFloat(f.getsRGB()), minFloat(f.getAdobeRGB()),
-                minFloat(f.getP3()), minFloat(f.getBrightness())
+                minFloat(f.getP3()), minFloat(f.getBrightness()), maxFloat(f.getResponse())
         );
         model.addAttribute("laptops",tmp);
         return "template";

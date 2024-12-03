@@ -9,6 +9,16 @@ public class Filter implements Serializable {
     private Float p3;
     private Float sRGB;
 
+    public Float getResponse() {
+        return response;
+    }
+
+    public void setResponse(Float response) {
+        this.response = response;
+    }
+
+    private Float response;
+
     public Float getBrightness() {
         return brightness;
     }
