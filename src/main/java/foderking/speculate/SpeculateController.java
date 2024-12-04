@@ -12,8 +12,7 @@ public class SpeculateController {
 
     @GetMapping
     public String index(Model model){
-        model.addAttribute("filter", new Filter());
-        return "filter";
+        return "index";
     }
     @GetMapping(value="/filter")
     public String getTemplate(Model model){
