@@ -28,7 +28,7 @@ public class SpeculateController {
                 minFloat(f.getP3()), minFloat(f.getBrightness()), maxFloat(f.getResponse())
         );
         model.addAttribute("laptops",tmp);
-        return "template";
+        return "filter-template";
     }
 
     public Float maxFloat(Float f){
