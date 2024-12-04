@@ -30,6 +30,10 @@ public class SpeculateController {
         model.addAttribute("laptops",tmp);
         return "filter-template";
     }
+    @GetMapping(value="/compare")
+    public String getCompare(Model model){
+        return "compare";
+    }
 
     public Float maxFloat(Float f){
         return f==null ? Float.MAX_VALUE : f;
