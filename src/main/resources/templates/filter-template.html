@@ -38,7 +38,7 @@
                 <th>Year</th>
             </tr>
             <tr th:each="laptop: ${laptops}">
-                <td><a target="_blank" th:href="${laptop.link}"><p th:text="${laptop.model}"  /></a></td>
+                <td><a target="_blank" th:href="@{('/laptop/' + ${laptop.id})}"><p th:text="${laptop.model}"  /></a></td>
                 <td th:text="${laptop.battery}" />
                 <td th:text="${laptop.coverageSRGB}" />
                 <td th:text="${laptop.coverageAdobeRGB}" />
