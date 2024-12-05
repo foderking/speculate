@@ -3,9 +3,10 @@ package foderking.speculate;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
-public interface LaptopRepository extends CrudRepository<Laptop, Long>{
-    Iterable<Laptop> findAllByRatingGreaterThanEqual(int rating);
+import java.util.Optional;
+import java.util.UUID;
 
+public interface LaptopRepository extends CrudRepository<Laptop, UUID>{
     @Query(value = """
 SELECT * FROM LAPTOP
 WHERE WEIGHT <= ?1 AND WEIGHT > 0

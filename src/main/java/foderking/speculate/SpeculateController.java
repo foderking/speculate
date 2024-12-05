@@ -5,6 +5,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+import java.util.UUID;
+
 @Controller
 public class SpeculateController {
     @Autowired
@@ -13,6 +16,12 @@ public class SpeculateController {
     @GetMapping
     public String index(Model model){
         return "index";
+    }
+    @GetMapping(value="/laptop/{id}")
+    public String getLaptop(Model model, @PathVariable UUID id){
+        Laptop laptop = repo.findById(id).orElse(new Laptop());
+        model.addAttribute("laptop", laptop);
+        return "laptop-template";
     }
     @GetMapping(value="/filter")
     public String getTemplate(Model model){

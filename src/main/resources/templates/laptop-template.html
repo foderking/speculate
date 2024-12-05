@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Speculate</title>
+    <style>
+        th {
+            background-color: #8080807a;
+        }
+        table, th, td{
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        td p {
+            margin: 0px;
+        }
+        td a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Speculate</h1>
+    <table>
+        <tbody>
+        <tr>
+            <td>Battery</td>
+            <td th:text="${laptop.battery}" />
+        </tr>
+        <tr>
+            <td>Brightness</td>
+            <td th:text="${laptop.brightness}" />
+        </tr>
+        <tr>
+            <td>Brightness Distribution</td>
+            <td th:text="${laptop.brightnessDist}" />
+        </tr>
+        </tbody>
+    </table>
+</body>
+</html>
