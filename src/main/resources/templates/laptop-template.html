@@ -23,18 +23,43 @@
     <h1>Speculate</h1>
     <table>
         <tbody>
-        <tr>
-            <td>Battery</td>
-            <td th:text="${laptop.battery}" />
-        </tr>
-        <tr>
-            <td>Brightness</td>
-            <td th:text="${laptop.brightness}" />
-        </tr>
-        <tr>
-            <td>Brightness Distribution</td>
-            <td th:text="${laptop.brightnessDist}" />
-        </tr>
+            <tr>
+                <th>Key</th>
+                <th>Value</th>
+            </tr>
+            <tr>
+                <td>Battery</td>
+                <td th:text="${laptop.battery}" />
+            </tr>
+            <tr>
+                <td>Brightness</td>
+                <td th:text="${laptop.brightness}" />
+            </tr>
+            <tr>
+                <td>Brightness Distribution</td>
+                <td th:text="${laptop.brightnessDist}" />
+            </tr>
+            <tr>
+                <td>Contrast</td>
+                <td th:text="${laptop.contrast}" />
+            </tr>
+            <tr>
+                <td>Contrast</td>
+                <td th:text="${laptop.contrast}" />
+            </tr>
+            <tr>
+                <td>Adobe RGB</td>
+                <td th:text="${laptop.coverageAdobeRGB}" />
+            </tr>
+            <tr>
+                <td>sRGB</td>
+                <td th:text="${laptop.coverageSRGB}" />
+            </tr>
+            <tr>
+                <td>P3</td>
+                <td th:text="${laptop.coverageP3}" />
+            </tr>
+        </tbody>
         </tbody>
     </table>
 </body>
