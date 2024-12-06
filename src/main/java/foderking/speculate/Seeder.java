@@ -57,7 +57,8 @@ public class Seeder implements CommandLineRunner {
             System.out.println("boobs");
         }
         else if (args.length == 1 && args[0].equals("update")) {
-            populateDB();
+            logger.info("scraping all laptop reviews");
+            parseAllReviews();
         }
         else{
             logger.info("running no seed");
@@ -65,7 +66,6 @@ public class Seeder implements CommandLineRunner {
     }
 
     public void parseAllReviews() {
-        logger.info("scraping all laptop reviews");
         int max_concurrent = 5;
         int start_year = 2013; // earliest review
         int current_year = Year.now().getValue();
