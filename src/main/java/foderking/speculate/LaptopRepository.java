@@ -26,4 +26,6 @@ ORDER BY RATING DESC
             int battery, float coverage_sRGB, float coverage_adobergb, float coverage_p3,
             float brightness, float response_time_gg
     );
+
+    boolean existsByLink(String link);
 }

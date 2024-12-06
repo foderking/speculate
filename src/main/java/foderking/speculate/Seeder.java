@@ -23,11 +23,13 @@ import java.util.function.Function;
 
 @Component
 public class Seeder implements CommandLineRunner {
-    LaptopRepository repo;
     HttpClient client;
+    LaptopRepository repo;
+    int max_concurrent = 5;
     Logger logger = LoggerFactory.getLogger(Seeder.class);
     AtomicInteger success = new AtomicInteger(0);
     AtomicInteger error   = new AtomicInteger(0);
+    AtomicInteger duplicate_count = new AtomicInteger(0);
 
     public Seeder(LaptopRepository repo, HttpClient client) {
         this.repo = repo;
@@ -36,10 +38,7 @@ public class Seeder implements CommandLineRunner {
 
     @Override
     public void run(String... args){
-        if (args.length == 1 && args[0].equals("update")) {
-            logger.info("running manual seed");
-        }
-        else if (args.length == 1 && args[0].equals("create")) {
+        if (args.length == 1 && args[0].equals("create")) {
             logger.info("scraping all laptop reviews");
             parseAllReviews();
         }
@@ -48,57 +47,8 @@ public class Seeder implements CommandLineRunner {
         }
     }
 
-    @Scheduled(fixedRate = 5000)
-    public void update(){
-        System.out.println("update");
-    }
-//    public void populateDB(){
-//        int max_concurrent = 5;
-//        int start_year = 2013; // earliest review
-//        int current_year = Year.now().getValue();
-//        Semaphore semaphore = new Semaphore(max_concurrent); // prevent read timeout
-//
-//        logger.info("scraping all laptop reviews");
-//
-//        for (int year = start_year; year <= current_year; year++) {
-//            logger.info("Year: " + year);
-//            success.set(0);
-//            error.set(0);
-//            Optional<List<String>> links =
-//                parseYear(year)
-//                .map(Jsoup::parse)
-//                .map(LaptopParser::createLinksFromSearch);
-//            if (links.isPresent()) {
-//                logger.info(links.get().size() + " links found");
-//                try(ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
-//                    for (String link : links.get()) {
-//                        executor.submit(() -> {
-//                            try {
-//                                semaphore.acquire();
-//                                Optional<Laptop> laptop = Laptop.create(link);
-//                                saveParsedLaptoptoDB(laptop);
-//                            }
-//                            catch (Exception e){
-//                                System.out.println(link);
-//                                e.printStackTrace();
-//                            }
-//                            finally {
-//                                semaphore.release();
-//                            }
-//                        });
-//                    }
-//
-//                }
-//                logger.info("success " + success.get() + ", error " + error.get());
-//            }
-//            else{
-//                logger.info("failed to parse year: " + year);
-//            }
-//        }
-//    }
-
     public <T, R> void concurrentExecutor(
-        int max_concurrent, Iterable<T> iterable, Function<T, R> entity_creator,
+        Iterable<T> iterable, Function<T, R> entity_creator,
         Consumer<R> entity_consumer, BiConsumer<Exception, T> error_consumer
     ){
         Semaphore semaphore = new Semaphore(max_concurrent); // prevent read timeout
@@ -122,8 +72,59 @@ public class Seeder implements CommandLineRunner {
         }
     }
 
+    @Scheduled(cron="0 0 */12 * * *") // executes every 12 hours
+    public void update(){
+        logger.info("updating review database");
+        int current_year = Year.now().getValue();
+        duplicate_count.set(0);
+
+        while (duplicate_count.get() == 0) {
+            logger.info("scraping reviews in " + current_year);
+            Optional<List<String>> links =
+                parseYear(current_year)
+                .map(Jsoup::parse)
+                .map(LaptopParser::createLinksFromSearch);
+            if (links.isPresent()) {
+                logger.info(links.get().size() + " links found");
+                concurrentExecutor(
+                    links.get(),
+                    link -> Laptop.create(link),
+                    laptop -> {
+                        if (laptop.isPresent()) {
+                            try{
+                                if (!repo.existsByLink(laptop.get().getLink())){
+                                    repo.save(laptop.get());
+                                    success.incrementAndGet();
+                                }
+                                else{
+                                    duplicate_count.incrementAndGet();
+                                }
+                            }
+                            catch (Exception e){
+                                error.incrementAndGet();
+                            }
+                        }
+                        else {
+                            error.incrementAndGet();
+                        }
+                    },
+                    (e, link) -> {
+                        System.out.println(link);
+                        e.printStackTrace();
+                    }
+                );
+                logger.info("updated: " + success.get() + ", errors: " + error.get() + ", duplicates: " + duplicate_count.get());
+                current_year -= 1;
+            }
+            else{
+                logger.info("failed to parse year: " + current_year);
+                // current_year isn't decremented so to make sure a year is checked before proceeding to the next
+            }
+        }
+        logger.info("finished updating database");
+    }
+
     public void parseAllReviews() {
-        int max_concurrent = 5;
         int start_year = 2013; // earliest review
         int current_year = Year.now().getValue();
         for (int year = start_year; year <= current_year; year++) {
@@ -137,9 +138,22 @@ public class Seeder implements CommandLineRunner {
             if (links.isPresent()) {
                 logger.info(links.get().size() + " links found");
                 concurrentExecutor(
-                    max_concurrent, links.get(),
+                    links.get(),
                     link -> Laptop.create(link),
-                    laptop -> saveParsedLaptoptoDB(laptop),
+                    laptop -> {//saveParsedLaptoptoDB(laptop),
+                        if (laptop.isPresent()) {
+                            try{
+                                repo.save(laptop.get());
+                                success.incrementAndGet();
+                            }
+                            catch (Exception e){
+                                error.incrementAndGet();
+                            }
+                        }
+                        else {
+                            error.incrementAndGet();
+                        }
+                    },
                     (e, link) -> {
                         System.out.println(link);
                         e.printStackTrace();
@@ -153,20 +167,20 @@ public class Seeder implements CommandLineRunner {
         }
     }
 
-    public void saveParsedLaptoptoDB(Optional<Laptop> laptop){
-        if (laptop.isPresent()) {
-            try{
-                repo.save(laptop.get());
-                success.incrementAndGet();
-            }
-            catch (Exception e){
-                error.incrementAndGet();
-            }
-        }
-        else {
-            error.incrementAndGet();
-        }
-    }
+//    public void saveParsedLaptoptoDB(Optional<Laptop> laptop){
+//        if (laptop.isPresent()) {
+//            try{
+//                repo.save(laptop.get());
+//                success.incrementAndGet();
+//            }
+//            catch (Exception e){
+//                error.incrementAndGet();
+//            }
+//        }
+//        else {
+//            error.incrementAndGet();
+//        }
+//    }
 
     public Optional<String> parseYear(int year){
         try {
