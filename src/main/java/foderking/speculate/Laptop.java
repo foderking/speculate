@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.*;
 
 @Entity
+@Table(indexes = {@Index(columnList = "LINK")})
 public class Laptop implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
