@@ -3,7 +3,6 @@ package foderking.speculate;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import java.net.URI;
@@ -38,25 +37,10 @@ public class Seeder implements CommandLineRunner {
     @Override
     public void run(String... args){
         logger.info("Started seeder");
-        if (args.length == 1 && args[0].equals("manual")) {
+        if (args.length == 1 && args[0].equals("update")) {
             logger.info("running manual seed");
-            List<String> links = List.of(
-                    "https://www.notebookcheck.net/Gigabyte-G5-KF5-2024-laptop-review-RTX-4060-gaming-at-a-bargain-price-is-the-deal-worth-it.906622.0.html",
-                    "https://www.notebookcheck.net/MSI-Sword-16-HX-Laptop-Review-Gaming-powerhouse-stifled-by-an-unimpressive-screen.888247.0.html"
-            );
-            links
-                    .stream()
-                    .map(Laptop::create)
-                    .forEach(each -> {
-                        if (each.isPresent()) {
-                            repo.save(each.get());
-                        } else {
-                            System.out.printf("Error: %s", each);
-                        }
-                    });
-            System.out.println("boobs");
         }
-        else if (args.length == 1 && args[0].equals("update")) {
+        else if (args.length == 1 && args[0].equals("create")) {
             logger.info("scraping all laptop reviews");
             parseAllReviews();
         }
@@ -64,82 +48,50 @@ public class Seeder implements CommandLineRunner {
             logger.info("running no seed");
         }
     }
-
-    public void parseAllReviews() {
-        int max_concurrent = 5;
-        int start_year = 2013; // earliest review
-        int current_year = Year.now().getValue();
-        for (int year = start_year; year <= current_year; year++) {
-            error.set(0);
-            success.set(0);
-            logger.info("scraping reviews in " + year);
-            Optional<List<String>> links =
-                parseYear(year)
-                .map(Jsoup::parse)
-                .map(LaptopParser::createLinksFromSearch);
-            if (links.isPresent()) {
-                logger.info(links.get().size() + " links found");
-                concurrentExecutor(
-                    max_concurrent, links.get(),
-                    link -> Laptop.create(link),
-                    laptop -> saveParsedLaptoptoDB(laptop),
-                    (e, link) -> {
-                        System.out.println(link);
-                        e.printStackTrace();
-                    }
-                );
-                logger.info("success " + success.get() + ", error " + error.get());
-            }
-            else{
-                logger.info("failed to parse year: " + year);
-            }
-        }
-    }
-
-    public void populateDB(){
-        int max_concurrent = 5;
-        int start_year = 2013; // earliest review
-        int current_year = Year.now().getValue();
-        Semaphore semaphore = new Semaphore(max_concurrent); // prevent read timeout
-
-        logger.info("scraping all laptop reviews");
-
-        for (int year = start_year; year <= current_year; year++) {
-            logger.info("Year: " + year);
-            success.set(0);
-            error.set(0);
-            Optional<List<String>> links =
-                parseYear(year)
-                .map(Jsoup::parse)
-                .map(LaptopParser::createLinksFromSearch);
-            if (links.isPresent()) {
-                logger.info(links.get().size() + " links found");
-                try(ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
-                    for (String link : links.get()) {
-                        executor.submit(() -> {
-                            try {
-                                semaphore.acquire();
-                                Optional<Laptop> laptop = Laptop.create(link);
-                                saveParsedLaptoptoDB(laptop);
-                            }
-                            catch (Exception e){
-                                System.out.println(link);
-                                e.printStackTrace();
-                            }
-                            finally {
-                                semaphore.release();
-                            }
-                        });
-                    }
-
-                }
-                logger.info("success " + success.get() + ", error " + error.get());
-            }
-            else{
-                logger.info("failed to parse year: " + year);
-            }
-        }
-    }
+//    public void populateDB(){
+//        int max_concurrent = 5;
+//        int start_year = 2013; // earliest review
+//        int current_year = Year.now().getValue();
+//        Semaphore semaphore = new Semaphore(max_concurrent); // prevent read timeout
+//
+//        logger.info("scraping all laptop reviews");
+//
+//        for (int year = start_year; year <= current_year; year++) {
+//            logger.info("Year: " + year);
+//            success.set(0);
+//            error.set(0);
+//            Optional<List<String>> links =
+//                parseYear(year)
+//                .map(Jsoup::parse)
+//                .map(LaptopParser::createLinksFromSearch);
+//            if (links.isPresent()) {
+//                logger.info(links.get().size() + " links found");
+//                try(ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
+//                    for (String link : links.get()) {
+//                        executor.submit(() -> {
+//                            try {
+//                                semaphore.acquire();
+//                                Optional<Laptop> laptop = Laptop.create(link);
+//                                saveParsedLaptoptoDB(laptop);
+//                            }
+//                            catch (Exception e){
+//                                System.out.println(link);
+//                                e.printStackTrace();
+//                            }
+//                            finally {
+//                                semaphore.release();
+//                            }
+//                        });
+//                    }
+//
+//                }
+//                logger.info("success " + success.get() + ", error " + error.get());
+//            }
+//            else{
+//                logger.info("failed to parse year: " + year);
+//            }
+//        }
+//    }
 
     public <T, R> void concurrentExecutor(
         int max_concurrent, Iterable<T> iterable, Function<T, R> entity_creator,
@@ -162,6 +114,37 @@ public class Seeder implements CommandLineRunner {
                         semaphore.release();
                     }
                 });
+            }
+        }
+    }
+
+    public void parseAllReviews() {
+        int max_concurrent = 5;
+        int start_year = 2013; // earliest review
+        int current_year = Year.now().getValue();
+        for (int year = start_year; year <= current_year; year++) {
+            error.set(0);
+            success.set(0);
+            logger.info("scraping reviews in " + year);
+            Optional<List<String>> links =
+                    parseYear(year)
+                            .map(Jsoup::parse)
+                            .map(LaptopParser::createLinksFromSearch);
+            if (links.isPresent()) {
+                logger.info(links.get().size() + " links found");
+                concurrentExecutor(
+                        max_concurrent, links.get(),
+                        link -> Laptop.create(link),
+                        laptop -> saveParsedLaptoptoDB(laptop),
+                        (e, link) -> {
+                            System.out.println(link);
+                            e.printStackTrace();
+                        }
+                );
+                logger.info("success " + success.get() + ", error " + error.get());
+            }
+            else{
+                logger.info("failed to parse year: " + year);
             }
         }
     }
