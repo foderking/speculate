@@ -17,6 +17,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -60,6 +61,38 @@ public class Seeder implements CommandLineRunner {
         }
         else{
             logger.info("running no seed");
+        }
+    }
+
+    public void parseAllReviews() {
+        logger.info("scraping all laptop reviews");
+        int max_concurrent = 5;
+        int start_year = 2013; // earliest review
+        int current_year = Year.now().getValue();
+        for (int year = start_year; year <= current_year; year++) {
+            error.set(0);
+            success.set(0);
+            logger.info("scraping reviews in " + year);
+            Optional<List<String>> links =
+                parseYear(year)
+                .map(Jsoup::parse)
+                .map(LaptopParser::createLinksFromSearch);
+            if (links.isPresent()) {
+                logger.info(links.get().size() + " links found");
+                concurrentExecutor(
+                    max_concurrent, links.get(),
+                    link -> Laptop.create(link),
+                    laptop -> saveParsedLaptoptoDB(laptop),
+                    (e, link) -> {
+                        System.out.println(link);
+                        e.printStackTrace();
+                    }
+                );
+                logger.info("success " + success.get() + ", error " + error.get());
+            }
+            else{
+                logger.info("failed to parse year: " + year);
+            }
         }
     }
 
@@ -110,7 +143,7 @@ public class Seeder implements CommandLineRunner {
 
     public <T, R> void concurrentExecutor(
         int max_concurrent, Iterable<T> iterable, Function<T, R> entity_creator,
-        Consumer<R> entity_consumer, Consumer<Exception> error_consumer
+        Consumer<R> entity_consumer, BiConsumer<Exception, T> error_consumer
     ){
         Semaphore semaphore = new Semaphore(max_concurrent); // prevent read timeout
         try(ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
@@ -123,7 +156,7 @@ public class Seeder implements CommandLineRunner {
                         );
                     }
                     catch (Exception e){
-                        error_consumer.accept(e);
+                        error_consumer.accept(e, item);
                     }
                     finally {
                         semaphore.release();
