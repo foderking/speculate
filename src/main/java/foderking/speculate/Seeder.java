@@ -17,17 +17,22 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 @Component
 public class Seeder implements CommandLineRunner {
-    @Autowired
     LaptopRepository repo;
-    @Autowired
     HttpClient client;
 
     Logger logger = LoggerFactory.getLogger(Seeder.class);
     AtomicInteger success = new AtomicInteger(0);
     AtomicInteger error   = new AtomicInteger(0);
+
+    public Seeder(LaptopRepository repo, HttpClient client) {
+        this.repo = repo;
+        this.client = client;
+    }
 
     @Override
     public void run(String... args){
@@ -99,6 +104,31 @@ public class Seeder implements CommandLineRunner {
             }
             else{
                 logger.info("failed to parse year: " + year);
+            }
+        }
+    }
+
+    public <T, R> void concurrentExecutor(
+        int max_concurrent, Iterable<T> iterable, Function<T, R> entity_creator,
+        Consumer<R> entity_consumer, Consumer<Exception> error_consumer
+    ){
+        Semaphore semaphore = new Semaphore(max_concurrent); // prevent read timeout
+        try(ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
+            for (T item : iterable) {
+                executor.submit(() -> {
+                    try {
+                        semaphore.acquire();
+                        entity_consumer.accept(
+                            entity_creator.apply(item)
+                        );
+                    }
+                    catch (Exception e){
+                        error_consumer.accept(e);
+                    }
+                    finally {
+                        semaphore.release();
+                    }
+                });
             }
         }
     }
