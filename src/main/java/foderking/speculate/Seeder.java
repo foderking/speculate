@@ -25,11 +25,11 @@ import java.util.function.Function;
 public class Seeder implements CommandLineRunner {
     HttpClient client;
     LaptopRepository repo;
-    int max_concurrent = 5;
     Logger logger = LoggerFactory.getLogger(Seeder.class);
     AtomicInteger success = new AtomicInteger(0);
     AtomicInteger error   = new AtomicInteger(0);
     AtomicInteger duplicate_count = new AtomicInteger(0);
+    int max_concurrent = 5;
 
     public Seeder(LaptopRepository repo, HttpClient client) {
         this.repo = repo;
