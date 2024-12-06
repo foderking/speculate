@@ -30,6 +30,7 @@ public class Seeder implements CommandLineRunner {
     AtomicInteger error   = new AtomicInteger(0);
     AtomicInteger duplicate_count = new AtomicInteger(0);
     int max_concurrent = 5;
+    String[] arg;
 
     public Seeder(LaptopRepository repo, HttpClient client) {
         this.repo = repo;
@@ -38,6 +39,7 @@ public class Seeder implements CommandLineRunner {
 
     @Override
     public void run(String... args){
+        arg = args;
         if (args.length == 1 && args[0].equals("create")) {
             logger.info("scraping all laptop reviews");
             parseAllReviews();
@@ -74,6 +76,10 @@ public class Seeder implements CommandLineRunner {
 
     @Scheduled(fixedRate = 1000*3600*24) // executes every 24 hours
     public void update(){
+        // prevent update service from running when scraping is taking place
+        if (arg.length == 1 && arg[0].equals("create")) {
+            return;
+        }
         logger.info("updating review database");
         int current_year = Year.now().getValue();
         int max_retry = 5;
