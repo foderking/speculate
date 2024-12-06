@@ -72,7 +72,7 @@ public class Seeder implements CommandLineRunner {
         }
     }
 
-    @Scheduled(cron="0 0 */12 * * *") // executes every 12 hours
+    @Scheduled(fixedRate = 1000*3600*24) // executes every 24 hours
     public void update(){
         logger.info("updating review database");
         int current_year = Year.now().getValue();
@@ -140,7 +140,7 @@ public class Seeder implements CommandLineRunner {
                 concurrentExecutor(
                     links.get(),
                     link -> Laptop.create(link),
-                    laptop -> {//saveParsedLaptoptoDB(laptop),
+                    laptop -> {
                         if (laptop.isPresent()) {
                             try{
                                 repo.save(laptop.get());
@@ -166,21 +166,6 @@ public class Seeder implements CommandLineRunner {
             }
         }
     }
-
-//    public void saveParsedLaptoptoDB(Optional<Laptop> laptop){
-//        if (laptop.isPresent()) {
-//            try{
-//                repo.save(laptop.get());
-//                success.incrementAndGet();
-//            }
-//            catch (Exception e){
-//                error.incrementAndGet();
-//            }
-//        }
-//        else {
-//            error.incrementAndGet();
-//        }
-//    }
 
     public Optional<String> parseYear(int year){
         try {
