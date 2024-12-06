@@ -76,6 +76,7 @@ public class Seeder implements CommandLineRunner {
     public void update(){
         logger.info("updating review database");
         int current_year = Year.now().getValue();
+        int max_retry = 5;
         duplicate_count.set(0);
 
         while (duplicate_count.get() == 0) {
@@ -118,7 +119,13 @@ public class Seeder implements CommandLineRunner {
             }
             else{
                 logger.info("failed to parse year: " + current_year);
-                // current_year isn't decremented so to make sure a year is checked before proceeding to the next
+                // retries a number of times before exiting
+                if (max_retry > 0){
+                    max_retry--;
+                }
+                else {
+                    duplicate_count.incrementAndGet();
+                }
             }
         }
         logger.info("finished updating database");
