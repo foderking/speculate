@@ -13,7 +13,7 @@ public class LaptopParser {
     public static float parsePWM(Map<String, String> compare_tables) {
         if (compare_tables.containsKey("Response Times:PWM Frequency") && !compare_tables.get("Response Times:PWM Frequency").isEmpty()) {
             return Float.parseFloat(
-                    compare_tables.get("Response Times:PWM Frequency")
+                compare_tables.get("Response Times:PWM Frequency")
             );
         }
         if (compare_tables.containsKey("Response Times:PWM Frequency") && compare_tables.get("Response Times:PWM Frequency").isEmpty()) {
