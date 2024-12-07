@@ -13,7 +13,7 @@
 <body>
     <h1>Speculate</h1>
     <h4>Search for laptop specs</h4>
-    <form class="search-container" action="#" th:action="@{/filter}" th:object="${filter}" method="post">
+    <form class="search-container" action="#" th:action="@{/laptop}" th:object="${filter}" method="post">
         Weight:    <input type="text" th:field="*{weight}" />
         Thickness: <input type="text" th:field="*{thickness}"/>
         Load temp: <input type="text" th:field="*{max_temperature_load}" />

@@ -17,18 +17,12 @@ public class SpeculateController {
     public String index(Model model){
         return "index";
     }
-    @GetMapping(value="/laptop/{id}")
-    public String getLaptop(Model model, @PathVariable UUID id){
-        Laptop laptop = repo.findById(id).orElse(new Laptop());
-        model.addAttribute("laptop", laptop);
-        return "laptop-template";
-    }
     @GetMapping(value="/filter")
     public String getTemplate(Model model){
         model.addAttribute("filter", new Filter());
         return "filter";
     }
-    @PostMapping(value="/filter")
+    @PostMapping(value="/laptop")
     public String postTemplate(@ModelAttribute("filter") Filter f, Model model){
         Iterable<Laptop> tmp = repo.filterAllColumns(
                 maxFloat(f.getWeight()), maxFloat(f.getThickness()),
@@ -38,6 +32,18 @@ public class SpeculateController {
         );
         model.addAttribute("laptops",tmp);
         return "filter-template";
+    }
+    @GetMapping(value="/laptop")
+    public String getLaptops(Model model){
+        Iterable<Laptop> laptops = repo.findAll();
+        model.addAttribute("laptops", laptops);
+        return "filter-template";
+    }
+    @GetMapping(value="/laptop/{id}")
+    public String getLaptop(Model model, @PathVariable UUID id){
+        Laptop laptop = repo.findById(id).orElse(new Laptop());
+        model.addAttribute("laptop", laptop);
+        return "laptop-template";
     }
     @GetMapping(value="/compare")
     public String getCompare(Model model){
