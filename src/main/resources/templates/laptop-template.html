@@ -17,16 +17,67 @@
         td a {
             text-decoration: none;
         }
+        th {
+            height: 1em;
+        }
     </style>
 </head>
 <body>
     <h1>Speculate</h1>
-    <div>Model: <a th:href="${laptop.link}"><p th:text="${laptop.model}" /></a></div>
+    <img th:src="@{('https://www.notebookcheck.net/'+${laptop.picture})}"/>
+    <div>Model: <a th:href="${laptop.link}"><span th:text="${laptop.model}" /></a></div>
+    <div>Rating: <span th:text="${laptop.rating}" /></div>
+    <div>Review Version: <span th:text="${laptop.reviewVersion}" /></div>
+    <div>Review Date: <span th:text="${laptop.reviewDate}" /></div>
+    <div>Reviewer: <span th:text="${laptop.reviewer}" /></div>
+    <h4>Temperature</h4>
     <table>
         <tbody>
             <tr>
-                <th>Key</th>
-                <th>Value</th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
+                <td>Max Idle</td>
+                <td th:text="${laptop.maxTemperatureIdle}" />
+            </tr>
+            <tr>
+                <td>Max Load</td>
+                <td th:text="${laptop.maxTemperatureLoad}" />
+            </tr>
+        </tbody>
+    </table>
+    <h4>Physical</h4>
+    <table>
+        <tbody>
+            <tr>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
+                <td>Length</td>
+                <td th:text="${laptop.length}" />
+            </tr>
+            <tr>
+                <td>Width</td>
+                <td th:text="${laptop.width}" />
+            </tr>
+            <tr>
+                <td>Thickness</td>
+                <td th:text="${laptop.thickness}" />
+            </tr>
+            <tr>
+                <td>Weight</td>
+                <td th:text="${laptop.weight}" />
+            </tr>
+        </tbody>
+    </table>
+    <h4>Screen</h4>
+    <table>
+        <tbody>
+            <tr>
+                <th></th>
+                <th></th>
             </tr>
             <tr>
                 <td>Battery</td>
@@ -45,10 +96,6 @@
                 <td th:text="${laptop.contrast}" />
             </tr>
             <tr>
-                <td>Contrast</td>
-                <td th:text="${laptop.contrast}" />
-            </tr>
-            <tr>
                 <td>Adobe RGB</td>
                 <td th:text="${laptop.coverageAdobeRGB}" />
             </tr>
@@ -59,6 +106,18 @@
             <tr>
                 <td>P3</td>
                 <td th:text="${laptop.coverageP3}" />
+            </tr>
+            <tr>
+                <td>PWM</td>
+                <td th:text="${laptop.PWMFrequency}" />
+            </tr>
+            <tr>
+                <td>Response Gray-Gray</td>
+                <td th:text="${laptop.responseGG}" />
+            </tr>
+            <tr>
+                <td>Response Black-White</td>
+                <td th:text="${laptop.responseBw}" />
             </tr>
         </tbody>
         </tbody>
