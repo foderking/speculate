@@ -27,6 +27,11 @@ If you don't want to use the provided `data.sql` and want to initialize it from 
 Navigate to the root directory, open the terminal and run
 `./mvnw spring-boot:run`
 
+# Buildling 
+To compile it to a distributable jar file, run:
+`mvn package -DskipTests`
+This jar file would be located in something like `target/speculate-0.0.1-SNAPSHOT.jar.original`
+
 ## Interface
 
 ![searching](./pic1.jpg)

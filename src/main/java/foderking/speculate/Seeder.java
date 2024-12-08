@@ -30,7 +30,7 @@ public class Seeder implements CommandLineRunner {
     AtomicInteger error   = new AtomicInteger(0);
     AtomicInteger duplicate_count = new AtomicInteger(0);
     int max_concurrent = 5;
-    String[] arg;
+    String[] arg = new String[]{};
 
     public Seeder(LaptopRepository repo, HttpClient client) {
         this.repo = repo;
