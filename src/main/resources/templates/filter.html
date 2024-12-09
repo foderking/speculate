@@ -27,12 +27,12 @@
         Sort By:
         <select name="sort">
             <option th:each="sort_param : ${T(foderking.speculate.SortParameters).values()}"
-                    th:value="${sort_param}" th:text="${sort_param}"></option>
+                    th:value="${sort_param}" th:text="${sort_param.value}"></option>
         </select>
         Sort Direction:
         <select name="sort_dir">
-            <option value="ASC">ASC</option>
-            <option value="DESC">DESC</option>
+            <option value="ASC">Ascending</option>
+            <option value="DESC">Descending</option>
         </select>
         <input type="submit" value="Submit" />
         <input type="reset" value="Reset" />
