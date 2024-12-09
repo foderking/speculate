@@ -5,7 +5,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Controller
@@ -34,9 +33,17 @@ public class SpeculateController {
         return "filter-template";
     }
     @GetMapping(value="/laptop")
-    public String getLaptops(Model model){
-        Iterable<Laptop> laptops = repo.findAll();
-        model.addAttribute("laptops", laptops);
+    public String getLaptops(Model model, Filter filter){
+        System.out.println(filter);
+        Iterable<Laptop> tmp = repo.filterAllColumns(
+                maxFloat(filter.getWeight()), maxFloat(filter.getThickness()),
+                maxInt(filter.getMax_temperature_load()), maxInt(filter.getMax_temperature_idle()),
+                minInt(filter.getBattery()), minFloat(filter.getsRGB()), minFloat(filter.getAdobeRGB()),
+                minFloat(filter.getP3()), minFloat(filter.getBrightness()), maxFloat(filter.getResponse())
+        );
+        model.addAttribute("laptops",tmp);
+//        Iterable<Laptop> laptops = repo.findAll();
+//        model.addAttribute("laptops", laptops);
         return "filter-template";
     }
     @GetMapping(value="/laptop/{id}")
