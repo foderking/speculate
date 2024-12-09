@@ -32,6 +32,11 @@ To compile it to a distributable jar file, run:
 `mvn package -DskipTests`
 This jar file would be located in something like `target/speculate-0.0.1-SNAPSHOT.jar.original`
 
+## Hot Reloading
+
+To hot reload when the application is already running:
+`mvn compile`
+
 ## Interface
 
 ![searching](./pic1.png)
