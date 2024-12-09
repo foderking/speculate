@@ -34,5 +34,5 @@ This jar file would be located in something like `target/speculate-0.0.1-SNAPSHO
 
 ## Interface
 
-![searching](./pic1.jpg)
-![results](./pic2.jpg)
+![searching](./pic1.png)
+![results](./pic2.png)
