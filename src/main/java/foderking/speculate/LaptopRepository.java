@@ -1,5 +1,6 @@
 package foderking.speculate;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import java.util.UUID;
@@ -17,12 +18,11 @@ AND COVERAGE_ADOBERGB >= ?7 AND COVERAGE_ADOBERGB > 0
 AND COVERAGE_P3 >= ?8 AND COVERAGE_P3 > 0
 AND BRIGHTNESS >= ?9 AND BRIGHTNESS > 0
 AND RESPONSE_GG <= ?10 AND RESPONSE_GG > 0
-ORDER BY RATING DESC    
 """, nativeQuery = true)
     Iterable<Laptop> filterAllColumns(
             float weight, float thickness, float max_temperature_load, float max_temperature_idle,
             int battery, float coverage_sRGB, float coverage_adobergb, float coverage_p3,
-            float brightness, float response_time_gg
+            float brightness, float response_time_gg, Sort sort
     );
 
     boolean existsByLink(String link);

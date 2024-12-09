@@ -24,6 +24,16 @@
         Coverage P3: <input type="text" th:field="*{p3}"/>
         Brightness: <input type="text" th:field="*{brightness}"/>
         Response: <input type="text" th:field="*{response}"/>
+        Sort By:
+        <select name="sort">
+            <option th:each="sort_param : ${T(foderking.speculate.SortParameters).values()}"
+                    th:value="${sort_param}" th:text="${sort_param}"></option>
+        </select>
+        Sort Direction:
+        <select name="sort_dir">
+            <option value="ASC">ASC</option>
+            <option value="DESC">DESC</option>
+        </select>
         <input type="submit" value="Submit" />
         <input type="reset" value="Reset" />
     </form>

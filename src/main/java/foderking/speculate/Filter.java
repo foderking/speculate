@@ -1,5 +1,7 @@
 package foderking.speculate;
 
+import org.springframework.data.domain.Sort;
+
 import java.io.Serializable;
 
 public class Filter implements Serializable {
@@ -8,6 +10,8 @@ public class Filter implements Serializable {
     private Float thickness;
     private Float p3;
     private Float sRGB;
+    private SortParameters sort;
+    private Sort.Direction sort_dir;
 
     public Float getResponse() {
         return response;
@@ -101,5 +105,21 @@ public class Filter implements Serializable {
     }
     public String toString() {
         return String.format("w=%f,t_idle=%d,t_load=%d", weight, max_temperature_idle, max_temperature_load);
+    }
+
+    public SortParameters getSort() {
+        return sort;
+    }
+
+    public void setSort(SortParameters sort) {
+        this.sort = sort;
+    }
+
+    public Sort.Direction getSort_dir() {
+        return sort_dir;
+    }
+
+    public void setSort_dir(Sort.Direction sort_dir) {
+        this.sort_dir = sort_dir;
     }
 }
