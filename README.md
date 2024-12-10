@@ -28,7 +28,7 @@ Navigate to the root directory, open the terminal and run
 `./mvnw spring-boot:run`
 
 
-# Buildling 
+# Building 
 To compile it to a distributable jar file, run:
 `mvn package -DskipTests`
 
