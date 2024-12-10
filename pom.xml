@@ -10,7 +10,7 @@
     </parent>
     <groupId>foderking</groupId>
     <artifactId>speculate</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>speculate</name>
     <description>speculate</description>
     <url/>
