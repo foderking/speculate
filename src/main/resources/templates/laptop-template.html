@@ -29,7 +29,7 @@
     <h1>Speculate</h1>
     <img th:src="@{('https://www.notebookcheck.net/'+${laptop.picture})}"/>
     <div>Model: <a th:href="${laptop.link}"><span th:text="${laptop.model}" /></a></div>
-    <div>Rating: <span th:text="${laptop.rating}" /></div>
+    <div>Rating: <span th:text="${laptop.rating}" />%</div>
     <div>Review Version: <span th:text="${laptop.reviewVersion}" /></div>
     <div>Review Date: <span th:text="${laptop.reviewDate}" /></div>
     <div>Reviewer: <span th:text="${laptop.reviewer}" /></div>
@@ -59,19 +59,19 @@
             </tr>
             <tr>
                 <td>Length</td>
-                <td th:text="${laptop.length}" />
+		<td th:text="${laptop.length}" > mm</td>
             </tr>
             <tr>
                 <td>Width</td>
-                <td th:text="${laptop.width}" />
+		<td th:text="${laptop.width}" > mm</td>
             </tr>
             <tr>
                 <td>Thickness</td>
-                <td th:text="${laptop.thickness}" />
+		<td th:text="${laptop.thickness}" > mm</td>
             </tr>
             <tr>
                 <td>Weight</td>
-                <td th:text="${laptop.weight}" />
+		<td th:text="${laptop.weight}" > kg</td>
             </tr>
         </tbody>
     </table>
@@ -84,43 +84,43 @@
             </tr>
             <tr>
                 <td>Battery</td>
-                <td th:text="${laptop.battery}" />
+		<td th:text="${laptop.battery}" > mins</td>
             </tr>
             <tr>
                 <td>Brightness</td>
-                <td th:text="${laptop.brightness}" />
+		<td th:text="${laptop.brightness}" > cd/m^2</td>
             </tr>
             <tr>
                 <td>Brightness Distribution</td>
-                <td th:text="${laptop.brightnessDist}" />
+		<td th:text="${laptop.brightnessDist}" > %</td>
             </tr>
             <tr>
                 <td>Contrast</td>
-                <td th:text="${laptop.contrast}" />
+                <td th:text="${laptop.contrast}" >
             </tr>
             <tr>
                 <td>Adobe RGB</td>
-                <td th:text="${laptop.coverageAdobeRGB}" />
+		<td th:text="${laptop.coverageAdobeRGB}" >%</td>
             </tr>
             <tr>
                 <td>sRGB</td>
-                <td th:text="${laptop.coverageSRGB}" />
+		<td th:text="${laptop.coverageSRGB}" >%</td>
             </tr>
             <tr>
                 <td>P3</td>
-                <td th:text="${laptop.coverageP3}" />
+		<td th:text="${laptop.coverageP3}" >%</td>
             </tr>
             <tr>
                 <td>PWM</td>
-                <td th:text="${laptop.PWMFrequency}" />
+		<td th:text="${laptop.PWMFrequency}" > Hz</td>
             </tr>
             <tr>
                 <td>Response Gray-Gray</td>
-                <td th:text="${laptop.responseGG}" />
+		<td th:text="${laptop.responseGG}" > ms</td>
             </tr>
             <tr>
                 <td>Response Black-White</td>
-                <td th:text="${laptop.responseBw}" />
+		<td th:text="${laptop.responseBw}" > ms</td>
             </tr>
         </tbody>
         </tbody>
